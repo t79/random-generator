@@ -1,0 +1,111 @@
+
+:root {
+    --default-color: black;
+    --default-background-color: white;
+    --default-input-background-color: var(--default-background-color);
+    --default-font: 'Helvetica Neue', Helvetica, Tahoma, Verdana, sans-serif;
+    --default-font-weight: 600;
+    --max-content-width: 1500px;
+}
+
+*,
+*::after,
+*::before {
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/********* HTML **********/
+
+@media only screen and (max-width: 420px) {
+    html {
+        font-size: 14px
+    }
+}
+
+@media only screen and (min-width: 420px) {
+    html {
+        font-size: 14.2px;
+    }
+}
+
+@media only screen and (min-width: 520px) {
+    html {
+        font-size: 14.6px;
+    }
+}
+
+@media only screen and (min-width: 590px) {
+    html {
+        font-size: 15px;
+    }
+}
+
+@media only screen and (min-width: 710px) {
+    html {
+        font-size: 15.7px;
+    }
+}
+
+@media only screen and (min-width: 760px) {
+    html {
+        font-size: 15.9px;
+    }
+}
+
+@media only screen and (min-width: 950px) {
+    html {
+        font-size: 16.1px;
+    }
+}
+
+@media only screen and (min-width: 11000px) {
+    html {
+        font-size: 16.3px;
+    }
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2rem;
+    width: min(100vw, var(--max-content-width));
+    padding: 2rem 1rem 1rem 0.2rem;
+    background-color: var(--default-background-color);
+    font-size: 1rem;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    line-height: 1.5;
+    font-family: var(--default-font);
+    font-weight: var(--default-font-weight);
+    overflow-x: hidden;
+}
+
+#generator-container {
+    width: min(100%, 70rem);
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.number-input-fields {
+    background-color: var(--default-input-background-color);
+    border: 0.1rem solid var(--default-color);
+    padding: 0.5rem;
+    font-size: 1rem;
+    font-family: var(--default-font);
+    font-weight: var(--default-font-weight);
+}
+
+.number-input-fields:focus {
+    border: 0.1rem solid var(--default-color);
+    border-color: var(--default-color);
+    box-shadow: none;
+    outline: none;
+}
