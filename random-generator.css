@@ -72,10 +72,11 @@
 body {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     gap: 2rem;
     width: min(100vw, var(--max-content-width));
+    height: 100vh;
     padding: 2rem 1rem 1rem 0.2rem;
     background-color: var(--default-background-color);
     font-size: 1rem;
@@ -109,3 +110,29 @@ body {
     box-shadow: none;
     outline: none;
 }
+
+footer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+footer a {
+    text-decoration: none;
+}
+
+#t79-badge {
+    font-size: 1.2rem;
+    font-weight: 400;
+    word-spacing: 0.1rem;
+    padding: 0.7rem 1rem;
+    border-radius: 7px;
+    background-color: #fc80a5;
+    color: rgb(166, 0, 75);
+}
+
+#t79-badge span {
+    font-weight: 600;
+}
+
