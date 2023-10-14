@@ -15,6 +15,7 @@ var t79RG = {
 function initGenerator() {
     getGeneratorInputElements();
     getGeneratorOutputElements();
+    getHistogramElement();
     getGeneratorSettingsElements();
     setupGeneratorInputElements();
     setupGeneratorOutputElements();
@@ -46,9 +47,12 @@ function generateRandom(e) {
         t79RG.generatedValues.push(getRandomValue());
     }
 
+    drawHistogram();
+
     formatGeneratedOutputString();
 
     t79RG.outputGeneratedResultElm.innerHTML = t79RG.outputString;
+    
 }
 
 function formatGeneratedOutputString() {
@@ -64,7 +68,7 @@ function formatGeneratedOutputString() {
     }
 
     for (i = 0; i < t79RG.generatedValues.length; i++) {
-        t79RG.outputString += t79RG.generatedValues[i];
+        t79RG.outputString += Math.floor(t79RG.generatedValues[i]);
         if (i < t79RG.generatedValues.length - 1) {
             t79RG.outputString += separator;
         }
@@ -98,7 +102,55 @@ function changeFormating(e) {
 }
 
 function getRandomValue() {
-    return Math.floor(Math.random() * t79RG.generateRangeSize) + t79RG.generateRangeFrom;
+    return Math.random() * t79RG.generateRangeSize + t79RG.generateRangeFrom;
+}
+
+function drawHistogram() {
+
+    const minValue = t79RG.generateRangeFrom;
+
+    let tres = []
+
+    let binSize = 1;
+    if (t79RG.generateRangeSize > 100) {
+        binSize = t79RG.generateRangeSize / 100;
+    }
+
+    for (i = 0; i < t79RG.generateRangeSize; i = i + binSize) {
+        tres.push(minValue + i + 1)
+    }
+
+    const bins = d3.bin()
+        .thresholds(tres)
+        .value((d) => d)
+        (t79RG.generatedValues);
+
+    let ratio = 300/bins.length;
+    for (i = 0; i < bins.length; i++) {
+        bins[i].x0 = i * ratio;
+    }
+
+    const y = d3.scaleLinear()
+        .domain([0, d3.max(bins, (d) => d.length)])
+        .range([100, 0]);
+
+    const svg = d3.create("svg")
+        .attr("width", 300)
+        .attr("height", 100)
+        .attr("viewBox", [0, 0, 300, 100]);
+
+    svg.append("g")
+        .attr("fill", "black")
+        .selectAll()
+        .data(bins)
+        .join("rect")
+            .attr("x", (d) => d.x0)
+            .attr("width", ratio)
+            .attr("y", (d) => y(d.length))
+            .attr("height", (d) => y(0) - y(d.length));
+
+    t79RG.generatedHistogramElm.innerHTML = "";
+    t79RG.generatedHistogramElm.appendChild(svg.node());
 }
 
 function getGeneratorInputElements() {
@@ -117,6 +169,10 @@ function getGeneratorOutputElements() {
 
 function setupGeneratorOutputElements() {
     t79RG.generatedValues = [];
+}
+
+function getHistogramElement() {
+    t79RG.generatedHistogramElm = document.getElementById("histogram");
 }
 
 function getGeneratorSettingsElements() {
