@@ -4,13 +4,20 @@ document.addEventListener('readystatechange', function () {
     }
 });
 
-var t79RG = {};
+var t79RG = {
+    Format: {
+        Column: 'column',
+        Normal: 'normal',
+        Array: 'array'
+    }
+};
 
 function initGenerator() {
     getGeneratorInputElements();
     getGeneratorOutputElements();
     getGeneratorSettingsElements();
     setupGeneratorInputElements();
+    setupGeneratorOutputElements();
     setupGeneratorSettingsElements();
 }
 
@@ -39,12 +46,55 @@ function generateRandom(e) {
         t79RG.generatedValues.push(getRandomValue());
     }
 
-    let outputText = "";
-    for (i = 0; i < t79RG.generatedValues.length; i++) {
-        outputText += t79RG.generatedValues[i] + " ";
+    formatGeneratedOutputString();
+
+    t79RG.outputGeneratedResultElm.innerHTML = t79RG.outputString;
+}
+
+function formatGeneratedOutputString() {
+    t79RG.outputString = "";
+    let separator = " ";
+
+    if (t79RG.outputFormat == t79RG.Format.Column) {
+        separator = "<br>";
+    }
+    else if (t79RG.outputFormat == t79RG.Format.Array) {
+        separator = ", ";
+        t79RG.outputString = "["
     }
 
-    t79RG.outputGeneratedResultElm.innerText = outputText;
+    for (i = 0; i < t79RG.generatedValues.length; i++) {
+        t79RG.outputString += t79RG.generatedValues[i];
+        if (i < t79RG.generatedValues.length - 1) {
+            t79RG.outputString += separator;
+        }
+    }
+
+    if (t79RG.outputFormat == t79RG.Format.Array) {
+        t79RG.outputString += "]"
+    }
+}
+
+function changeFormating(e) {
+    if (e == null || e.target == t79RG.settingsSeqFormatColumnRadioElm) {
+        t79RG.outputFormat = t79RG.Format.Column;
+        t79RG.outputGeneratedResultElm.style.columns = 10 + "ch";
+        t79RG.outputGeneratedResultElm.style.textAlign = "right";
+    }
+    else if (e.target == t79RG.settingsSeqFormatNormalRadioElm) {
+        t79RG.outputFormat = t79RG.Format.Normal;
+        t79RG.outputGeneratedResultElm.style.columns = 1;
+        t79RG.outputGeneratedResultElm.style.textAlign = "left";
+    }
+    else if (e.target == t79RG.settingsSeqFormatArrayRadioElm) {
+        t79RG.outputFormat = t79RG.Format.Array;
+        t79RG.outputGeneratedResultElm.style.columns = 1;
+        t79RG.outputGeneratedResultElm.style.textAlign = "left";
+    }
+
+    formatGeneratedOutputString();
+
+    t79RG.outputGeneratedResultElm.innerHTML = t79RG.outputString;
 }
 
 function getRandomValue() {
@@ -65,10 +115,17 @@ function getGeneratorOutputElements() {
     t79RG.outputGeneratedResultElm = document.getElementById("generator-output");
 }
 
+function setupGeneratorOutputElements() {
+    t79RG.generatedValues = [];
+}
+
 function getGeneratorSettingsElements() {
     t79RG.settingsSeqLengthRangeRadioElm = document.getElementById("generator-settings-sequence-length-range");
     t79RG.settingsSeqLengthNumRadioElm = document.getElementById("generator-settings-sequence-length-num");
     t79RG.settingsSeqLengthNumValueElm = document.getElementById("generator-settings-sequence-length-num-input");
+    t79RG.settingsSeqFormatColumnRadioElm = document.getElementById("generator-settings-sequence-format-column");
+    t79RG.settingsSeqFormatNormalRadioElm = document.getElementById("generator-settings-sequence-format-normal");
+    t79RG.settingsSeqFormatArrayRadioElm = document.getElementById("generator-settings-sequence-format-array");
 }
 
 function setupGeneratorSettingsElements() {
@@ -85,5 +142,10 @@ function setupGeneratorSettingsElements() {
         t79RG.settingsSeqLengthNumValueElm.disabled = false;
         generateRandom();
     });
-    t79RG.settingsSeqLengthNumValueElm.addEventListener("input", generateRandom)
+    t79RG.settingsSeqLengthNumValueElm.addEventListener("input", generateRandom);
+    t79RG.settingsSeqFormatColumnRadioElm.checked = true;
+    changeFormating(null);
+    t79RG.settingsSeqFormatColumnRadioElm.addEventListener("input", changeFormating);
+    t79RG.settingsSeqFormatNormalRadioElm.addEventListener("input", changeFormating);
+    t79RG.settingsSeqFormatArrayRadioElm.addEventListener("input", changeFormating);
 }

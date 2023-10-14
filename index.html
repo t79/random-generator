@@ -25,6 +25,7 @@
         <div id="generator-output"></div>
 
         <div id="generator-settings">
+
             <div id="generator-settings-sequence-length">
                 <div id="generstor-settings-sequence-length-header">
                     Sequence length
@@ -37,6 +38,26 @@
                     <div>
                         <input type="radio" id="generator-settings-sequence-length-num" name="quantity">
                         <input type="number" id="generator-settings-sequence-length-num-input">
+                    </div>
+                </fieldset>
+            </div>
+
+            <div id="generator-settings-sequence-format">
+                <div id="generator-settings-sequence-format-header">
+                    Formating
+                </div>
+                <fieldset id="generator-settings-sequence-format-options">
+                    <div>
+                        <input type="radio" id="generator-settings-sequence-format-column" name="format">
+                        <label for="generator-settings-sequence-format-column">Columns</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="generator-settings-sequence-format-normal" name="format">
+                        <label for="generator-settings-sequence-format-normal">1 3 7 5 2 8 9</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="generator-settings-sequence-format-array" name="format">
+                        <label for="generator-settings-sequence-format-array">[4, 2, 7, 4, 3, 2]</label>
                     </div>
                 </fieldset>
             </div>
