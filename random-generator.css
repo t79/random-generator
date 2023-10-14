@@ -116,10 +116,13 @@ footer {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+    align-items: center;
+    gap: 0.8rem;
 }
 
 footer a {
     text-decoration: none;
+    color: var(--default-color);
 }
 
 #t79-badge {
@@ -134,5 +137,55 @@ footer a {
 
 #t79-badge span {
     font-weight: 600;
+}
+
+#git-badge img {
+    height: 2rem;
+    width: auto;
+}
+
+#git-badge a {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+#git-badge-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.7rem;
+    line-height: 1.1;
+}
+
+#pride-badge {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #ffd3e7;
+    padding: 0.3rem;
+    border-radius: 7px;
+    border: 1px solid #ffb6d8;
+}
+
+#pride-banner-text {
+    align-self: center;
+    font-size: 0.75rem;
+    line-height: 1.1;
+    white-space: pre;
+}
+
+.pride-banner-icon {
+    height: 2rem;
+}
+
+.pride-banner-flag {
+    height: 2.5rem;
+    border-radius: 5px;
 }
 
