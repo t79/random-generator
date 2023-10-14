@@ -90,9 +90,14 @@ body {
 
 #generator-container {
     width: min(100%, 70rem);
-    flex-direction: column;
+    display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content:space-between;
+}
+
+#generator-input {
+    width: 100%;
 }
 
 .number-input-fields {
@@ -109,6 +114,18 @@ body {
     border-color: var(--default-color);
     box-shadow: none;
     outline: none;
+}
+
+#generator-output {
+    width: calc(100% - 18rem);
+}
+
+#generator-settings {
+    width: 17rem;
+}
+
+fieldset {
+    border: 0 solid black;
 }
 
 footer {

@@ -9,7 +9,9 @@ var t79RG = {};
 function initGenerator() {
     getGeneratorInputElements();
     getGeneratorOutputElements();
+    getGeneratorSettingsElements();
     setupGeneratorInputElements();
+    setupGeneratorSettingsElements();
 }
 
 function generateRandom(e) {
@@ -25,7 +27,15 @@ function generateRandom(e) {
 
     t79RG.generatedValues = [];
 
-    for (i = 0; i < 100; i++) {
+    let count = 0;
+    if(t79RG.sequenceLengtIsRange) {
+        count = t79RG.generateRangeSize
+    }
+    else {
+        count = parseFloat(t79RG.settingsSeqLengthNumValueElm.value);
+    }
+
+    for (i = 0; i < count; i++) {
         t79RG.generatedValues.push(getRandomValue());
     }
 
@@ -53,4 +63,27 @@ function setupGeneratorInputElements() {
 
 function getGeneratorOutputElements() {
     t79RG.outputGeneratedResultElm = document.getElementById("generator-output");
+}
+
+function getGeneratorSettingsElements() {
+    t79RG.settingsSeqLengthRangeRadioElm = document.getElementById("generator-settings-sequence-length-range");
+    t79RG.settingsSeqLengthNumRadioElm = document.getElementById("generator-settings-sequence-length-num");
+    t79RG.settingsSeqLengthNumValueElm = document.getElementById("generator-settings-sequence-length-num-input");
+}
+
+function setupGeneratorSettingsElements() {
+    t79RG.sequenceLengtIsRange = false;
+    t79RG.settingsSeqLengthNumValueElm.value = 100;
+    t79RG.settingsSeqLengthNumRadioElm.checked = true;
+    t79RG.settingsSeqLengthRangeRadioElm.addEventListener("input", function(e) {
+        t79RG.sequenceLengtIsRange = true;
+        t79RG.settingsSeqLengthNumValueElm.disabled = true;
+        generateRandom();
+    });
+    t79RG.settingsSeqLengthNumRadioElm.addEventListener("input", function(e) {
+        t79RG.sequenceLengtIsRange = false;
+        t79RG.settingsSeqLengthNumValueElm.disabled = false;
+        generateRandom();
+    });
+    t79RG.settingsSeqLengthNumValueElm.addEventListener("input", generateRandom)
 }
