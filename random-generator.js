@@ -19,7 +19,7 @@ function generateRandom(e) {
     t79RG.generateRangeSize = t79RG.generateRangeTo - t79RG.generateRangeFrom;
 
     if (Number.isNaN(t79RG.generateRangeSize) || t79RG.generateRangeSize <= 0) {
-        t79RG.outputGeneratedResultElm.innerText.innerText = "";
+        t79RG.outputGeneratedResultElm.innerText = "";
         return;
     }
 
