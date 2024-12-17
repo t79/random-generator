@@ -5,6 +5,8 @@ import { ClipboardManager } from "./clipboard-manager.js";
 import { FileManager } from "./file-manager.js";
 import { GeneratorSettings } from "./generator-settings.js";
 import { FormatterSettings } from "./formatter-settings.js";
+import { HistogramManager } from "./histogram-manager.js";
+import { InputManager } from "./input-manager.js";
 
 export class NumberSequence {
 
@@ -15,6 +17,8 @@ export class NumberSequence {
     _webpageManager;
     _clipboardManager;
     _fileManager;
+    _inputManager;
+    _histogramManager;
     _reGenerateElm;
 
     constructor() {
@@ -23,14 +27,17 @@ export class NumberSequence {
 
     Setup() {
         this._generator = new Generator();
-        this._generatorSettings = new GeneratorSettings(this._generator);
         this._formatter = new Formatter();
-        this._formatterSettings = new FormatterSettings(this._formatter);
+        this._inputManager = new InputManager(this._formatter);
+        this._generatorSettings = new GeneratorSettings(this._generator, this._inputManager);
+        this._formatterSettings = new FormatterSettings(this._formatter, this._inputManager);
         this._webpageManager = new WebpageManager(this._formatter);
         this._clipboardManager = new ClipboardManager(this._formatter);
         this._fileManager = new FileManager(this._formatter);
+        this._histogramManager = new HistogramManager(this._generator);
         this.GetElements();
         this.SetEventListeners();
+        this.GenerateValues();
     }
 
     GetElements() {

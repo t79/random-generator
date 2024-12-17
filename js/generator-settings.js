@@ -1,10 +1,11 @@
+import { InputManager } from "./input-manager.js";
 
 
 
 export class GeneratorSettings {
 
     _generator;
-    _numberOfValueInputElm;
+    _inputManager;
     _numberOfValueCountInputElm;
     _numberOfValues = 0;
     _decimalStateSliderElm;
@@ -15,22 +16,24 @@ export class GeneratorSettings {
     _decimalLengthSliderElm;
     _decimalLengthValueElm;
     _decimalLength = 0;
-    _fromRangeInputElm;
-    _toRangeInputElm;
     _distributionSliderElm;
     _distributionUniformElm;
     _distributionNormalElm;
+    _distributionNormal2Elm;
+    _distributionMoreButtonElm;
+    _distributionMorePulldownElm;
+    _distributionBetaAlphaSliderElm;
+    _distributionBetaBetaSliderElm;
     _distribution = 1;
 
-    constructor(generator) {
+    constructor(generator, inputManager) {
         this._generator = generator;
+        this._inputManager = inputManager;
         this.GetElements();
         this.SetEventListeners();
-        this.SetInitValues();
     }
 
     GetElements() {
-        this._numberOfValueInputElm = document.getElementById("count-value");
         this._numberOfValueCountInputElm = document.getElementById("sequence-count-value");
         this._decimalStateSliderElm = document.getElementById("decimals-slider");
         this._decimalStateMaxLabelElm = document.getElementById("settings-max-decimal-label");
@@ -38,43 +41,58 @@ export class GeneratorSettings {
         this._decimalStatePrecisionLabelElm = document.getElementById("settings-precision-label");
         this._decimalLengthSliderElm = document.getElementById("length-digits-slider");
         this._decimalLengthValueElm = document.getElementById("length-digits");
-        this._fromRangeInputElm = document.getElementById("start-value");
-        this._toRangeInputElm = document.getElementById("end-value");
         this._distributionSliderElm = document.getElementById("distribution-slider");
         this._distributionUniformElm = document.getElementById("settings-uniform-label");
         this._distributionNormalElm = document.getElementById("settings-normal-label");
+        this._distributionNormal2Elm = document.getElementById("settings-normal2-label");
+        this._distributionMoreButtonElm = document.getElementById("settings-more-label");
+        this._distributionMorePulldownElm = document.getElementById("settings-more-pulldown");
+        this._distributionBetaAlphaSliderElm = document.getElementById("settings-beta-alpha-slider");
+        this._distributionBetaBetaSliderElm = document.getElementById("settings-beta-beta-slider");
+
     }
 
     SetEventListeners() {
-        this._numberOfValueInputElm.addEventListener("input", () => this.SetNumberOfValuesFromInput());
         this._numberOfValueCountInputElm.addEventListener("input", () => this.SetNumberOfValuesFromSettings());
         this._decimalStateSliderElm.addEventListener("input", () => this.SetDecimalState());
         this._decimalStateMaxLabelElm.addEventListener("click", () => this.SetDecimalState(1));
         this._decimalStateFixLabelElm.addEventListener("click", () => this.SetDecimalState(2));
         this._decimalLengthSliderElm.addEventListener("input", () => this.SetDecimalLength());
-        this._fromRangeInputElm.addEventListener("input", () => { this._generator.RangeStart = parseFloat(this._fromRangeInputElm.value); });
-        this._toRangeInputElm.addEventListener("input", () => { this._generator.RangeEnd = parseFloat(this._toRangeInputElm.value); });
         this._distributionSliderElm.addEventListener("input", () => this.SetDistribution());
         this._distributionUniformElm.addEventListener("click", () => this.SetDistribution(1));
         this._distributionNormalElm.addEventListener("click", () => this.SetDistribution(2));
+        this._distributionMoreButtonElm.addEventListener("click", () => this.ToggleDistributionMoreOptions());
+        this._inputManager.AddEventListener("StartValueChanged", (inst) => { this._generator.RangeStart = this._inputManager.ValueStart });
+        this._inputManager.AddEventListener("EndValueChanged", (inst) => { this._generator.RangeEnd = this._inputManager.ValueEnd });
+        this._inputManager.AddEventListener("ValueCountChanged", (inst) => { this.SetNumberOfValuesFromInput() });
+        this._distributionBetaAlphaSliderElm.addEventListener("input", () => { this._generator.BetaDistributionAlpha = parseFloat(this._distributionBetaAlphaSliderElm.value); });
+        this._distributionBetaBetaSliderElm.addEventListener("input", () => { this._generator.BetaDistributionBeta = parseFloat(this._distributionBetaBetaSliderElm.value); });
     }
 
-    SetInitValues() {
-        this._fromRangeInputElm.value = this._generator.RangeStart;
-        this._toRangeInputElm.value = this._generator.RangeEnd;
+    ToggleDistributionMoreOptions() {
+        if (this._distributionMorePulldownElm.style.display === "none") {
+            this._distributionMorePulldownElm.style.display = "flex";
+            this._distributionMoreButtonElm.innerHTML = "Less";
+            this._distributionSliderElm.max = 4;
+        }
+        else {
+            this._distributionMorePulldownElm.style.display = "none";
+            this._distributionMoreButtonElm.innerHTML = "More";
+            this._distributionSliderElm.max = 2;
+        }
     }
 
     SetNumberOfValuesFromSettings() {
         const numberOfValues = parseInt(this._numberOfValueCountInputElm.value);
         if (numberOfValues != this._numberOfValues) {
             this._numberOfValues = numberOfValues;
-            this._numberOfValueInputElm.value = numberOfValues;
+            this._inputManager.ValueCount = numberOfValues;
             this._generator.SequenceLength = this._numberOfValues;
         }
     }
 
     SetNumberOfValuesFromInput() {
-        const numberOfValues = parseInt(this._numberOfValueInputElm.value);
+        const numberOfValues = this._inputManager.ValueCount;
         if (numberOfValues != this._numberOfValues) {
             this._numberOfValues = numberOfValues;
             this._numberOfValueCountInputElm.value = numberOfValues;
@@ -111,7 +129,6 @@ export class GeneratorSettings {
             if (parseInt(this._decimalStateSliderElm.value) != this._decimalState) {
                 this._decimalStateSliderElm.value = state;
             }
-
             this._generator.ValueDecimalState = state;
         }
 
@@ -124,6 +141,7 @@ export class GeneratorSettings {
             this._decimalLength = length;
             this._decimalLengthValueElm.value = length;
             this._generator.ValueDecimalLength = this._decimalLength;
+            console.log("Decimal length: " + length);
         }
     }
 
@@ -137,10 +155,23 @@ export class GeneratorSettings {
         if (distribution == 1) {
             this._distributionUniformElm.classList.add("setting-option-label-selected");
             this._distributionNormalElm.classList.remove("setting-option-label-selected");
+            this._distributionNormal2Elm.classList.remove("setting-option-label-selected");
         }
         else if (distribution == 2) {
             this._distributionUniformElm.classList.remove("setting-option-label-selected");
             this._distributionNormalElm.classList.add("setting-option-label-selected");
+            this._distributionNormal2Elm.classList.remove("setting-option-label-selected");
+        }
+        else if (distribution == 3) {
+            this._distributionUniformElm.classList.remove("setting-option-label-selected");
+            this._distributionNormalElm.classList.remove("setting-option-label-selected");
+            this._distributionNormal2Elm.classList.add("setting-option-label-selected");
+        }
+        else if (distribution == 4) {
+            this._distributionUniformElm.classList.remove("setting-option-label-selected");
+            this._distributionNormalElm.classList.remove("setting-option-label-selected");
+            this._distributionNormal2Elm.classList.remove("setting-option-label-selected");
+            console.log("More options: Beta");
         }
 
         if (parseInt(this._distributionSliderElm.value) != this._distribution) {
@@ -149,6 +180,12 @@ export class GeneratorSettings {
 
         this._generator.Distribution = distribution;
     }
+
+    SetNormalDistributionMean() {
+        this._generator.NormalDistributionMean = parseFloat(this._normalDistributionMeanInputElm.value);
+    }
+
+
 
 
 

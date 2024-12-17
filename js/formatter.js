@@ -3,8 +3,10 @@ import { BaseClass } from "./base-class.js";
 
 export class Formatter extends BaseClass {
 
-
-    _matrixDimensions = [];
+    _formatMode = 1;
+    _outputElm;
+    _settingsElm;
+    _matrixDimensions = [2];
     _linebreak = 0;
     _sequenceValues = [];
     _sequenceIndex = 0;
@@ -19,7 +21,17 @@ export class Formatter extends BaseClass {
     set SequenceValues(value) {
         this._sequenceValues = value;
         this.Format();
-    }   
+    }  
+    
+    set FormatMode(value) {
+        this._formatMode = value;
+        this.Format();
+    }
+
+    set Linebreak(value) {
+        this._linebreak = value;
+        this.Format();
+    }
 
     get FormattedHtmlStr() {
         return this._formattedHtmlStr;
@@ -43,18 +55,84 @@ export class Formatter extends BaseClass {
     }
 
     Setup() {
-        this.SetupHtmlElements();
+        this._outputElm = document.getElementById("output");
+        this._settingsElm = document.getElementById("settings-column-container");
+
+        const resizeWatcher = new ResizeObserver(entries => {
+            this.SetOutputWidth();
+        });
+        resizeWatcher.observe(this._settingsElm)
+
     }
 
-    SetupHtmlElements() {
-        // this._matrixInputElm = document.getElementById("matrix-formatting-input");
-        // this._matrixInputElm.addEventListener("input", () => this.FormatMatrix());
-        // this._linebreakInputElm = document.getElementById("linebreak-input");
-        // this._linebreakInputElm.addEventListener("input", () => {
-        //     this._linebreak = parseInt(this._linebreakInputElm.value);
-        //     console.log(this._linebreak);
-        //     this.FormatMatrix();
-        // });
+    SetOutputWidth() {
+        const settingsWith = this._settingsElm.getBoundingClientRect().width;
+        this._outputElm.style.width = "calc(100% - " + settingsWith + "px)";
+    }
+
+    Format() {
+        if (this._formatMode === 1) {
+            this.FormatNormal();
+        }
+        else if (this._formatMode === 2) {
+            this.FormatList()
+        }
+        else if (this._formatMode === 3) {
+            this.FormatMatrix();
+        }
+        this.SetOutputWidth();
+    }
+
+    FormatNormal() {
+        this._formattedHtmlStr = this._sequenceValues.join(" ");
+        this._formattedTextStr = this._formattedHtmlStr ;
+        this._outputElm.style.whiteSpace = "normal";
+        this.DispatchEvent("formattedListChanged");
+    }
+
+    FormatList() {
+        this._formattedHtmlStr = "[" + this._sequenceValues.join(", ") + "]";
+        this._formattedTextStr = this._formattedHtmlStr;
+        this._outputElm.style.whiteSpace = "normal";
+        this.DispatchEvent("formattedListChanged");
+    }
+
+    FormatMatrix() {
+
+        let result = {
+            html: "",
+            text: ""
+        }
+
+        result.html += "[";
+        result.text += "[";
+
+        for (let index = 0; this._sequenceIndex < this._sequenceValues.length && 
+            this._matrixDimensions.length > 0; index++) {
+
+            if (index > 0) {
+                result.html += ", ";
+                result.text += ",";
+                if (this._linebreak >= 1) {
+                    result.html += "<br>";
+                    result.text += "\n";
+                }
+            }
+
+            
+            const callResult = this.MakeMatrixList(this._matrixDimensions, 2, true);
+            result.html += callResult.html;
+            result.text += callResult.text;
+        }
+        result.html += "]";
+        result.text += "]";
+
+        this._sequenceIndex = 0;
+        this._formattedHtmlStr = result.html;
+        this._formattedTextStr = result.text;
+
+        this._outputElm.style.whiteSpace = "wrap";
+        this.DispatchEvent("formattedListChanged");
     }
 
     MakeMatrixList(dim, level, last) {
@@ -109,45 +187,6 @@ export class Formatter extends BaseClass {
             }
             return result;
         }
-    }
-
-    Format() {
-
-        let result = {
-            html: "",
-            text: ""
-        }
-        let htmlResultStr = "";
-        let clipboardResultStr = "";
-
-        result.html += "[";
-        result.text += "[";
-
-        for (let index = 0; this._sequenceIndex < this._sequenceValues.length && 
-            this._matrixDimensions.length > 0; index++) {
-
-            if (index > 0) {
-                result.html += ", ";
-                result.text += ",";
-                if (this._linebreak >= 1) {
-                    result.html += "<br>";
-                    result.text += "\n";
-                }
-            }
-
-            
-            const callResult = this.MakeMatrixList(this._matrixDimensions, 2, true);
-            result.html += callResult.html;
-            result.text += callResult.text;
-        }
-        result.html += "]";
-        result.text += "]";
-
-        this._sequenceIndex = 0;
-        this._formattedHtmlStr = result.html;
-        this._formattedTextStr = result.text;
-
-        this.DispatchEvent("formattedListChanged");
     }
 }
 

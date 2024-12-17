@@ -4,6 +4,7 @@
 export class FormatterSettings {
 
     _formatter;
+    _inputManager;
     _formatSliderElm;
     _formatSingleLabelElm;
     _formatListLabelElm;
@@ -12,16 +13,18 @@ export class FormatterSettings {
     _formatState = 1;
     _linebreakSliderElm;
     _linebreakLabelElm;
-    _linebreakMatrixDims = [];
+    _linebreakMatrixDims = [2];
 
-    constructor(formatter) {
+    constructor(formatter, inputManager) {
         this._formatter = formatter;
+        this._inputManager = inputManager;
         this.Setup();
     }
 
     Setup() {
         this.GetElements();
         this.SetEventListeners();
+        this.FormatLinebreakLabel();
     }
 
     GetElements() {
@@ -46,7 +49,7 @@ export class FormatterSettings {
 
     SetFormat(format = 0) {
 
-        if (format == 0) {
+        if (format === 0) {
             format = parseInt(this._formatSliderElm.value);
         }
 
@@ -57,20 +60,24 @@ export class FormatterSettings {
                 this._formatSingleLabelElm.classList.add("setting-option-label-selected");
                 this._formatListLabelElm.classList.remove("setting-option-label-selected");
                 this._formatMatrixLabelElm.classList.remove("setting-option-label-selected");
-                console.log("Single values");
+                this._formatter.FormatMode = 1;
+                this._inputManager.MatrixMode = false;
             }
             else if (this._formatState == 2) {
                 this._formatSingleLabelElm.classList.remove("setting-option-label-selected");
                 this._formatListLabelElm.classList.add("setting-option-label-selected");
                 this._formatMatrixLabelElm.classList.remove("setting-option-label-selected");
-                console.log("List");
+                this._formatter.FormatMode = 2;
+                this._inputManager.MatrixMode = false;
             }
             else if (this._formatState == 3) {
                 this._formatSingleLabelElm.classList.remove("setting-option-label-selected");
                 this._formatListLabelElm.classList.remove("setting-option-label-selected");
                 this._formatMatrixLabelElm.classList.add("setting-option-label-selected");
-                console.log("Matrix");
+                this._formatter.FormatMode = 3
+                this._inputManager.MatrixMode = true;
             }
+            this.FormatLinebreakLabel();
         }
     }
 
@@ -98,29 +105,48 @@ export class FormatterSettings {
 
         this._formatter.MatrixDimensions = dimensions;
         this._linebreakMatrixDims = dimensions;
+        this._inputManager.MatrixSize = dimensions.length > 0 ? dimensions.reduce((result, value) => {return result * value; },1) : 0;
+        //this._linebreakSliderElm.value = 1;
         this.FormatLinebreakLabel();
-
+        this.SetFormat(3);
+        this._formatSliderElm.value = 3;
         console.log(dimensions);
     }
 
     FormatLinebreakLabel() {
-        const linebreakPos = parseInt(this._linebreakSliderElm.value);
+
+        this._linebreakLabelElm.innerHTML = '<span class="linebreak-marking">Wrap</span>';
+        return;
+
+        if (this._formatState !== 3) {
+            this._linebreakLabelElm.innerHTML = '<span class="linebreak-marking">Wrap</span>';
+            return;
+        }
 
         let labelStr = "";
+        const linebreakPos = parseInt(this._linebreakSliderElm.value);
+
+        if (linebreakPos === 0) {
+            labelStr = '<span class="linebreak-marking">Wrap</span> ';
+        }
+        else {
+            labelStr = "Wrap "
+        }
+
         for (let i = 0; i < this._linebreakMatrixDims.length; i++) {
-            if (i == linebreakPos) {
+            if (i === 0 && linebreakPos != 0) {
                 labelStr += '<span class="linebreak-marking">';
             }
             labelStr += this._linebreakMatrixDims[i];
             if (i < this._linebreakMatrixDims.length - 1) {
                 labelStr += " x ";
             }
-            else {
+            if (i === linebreakPos + 1) {
                 labelStr += "</span>";
             }
         }
         this._linebreakLabelElm.innerHTML = labelStr;
-        this._linebreakSliderElm.max = this._linebreakMatrixDims.length;
+        this._linebreakSliderElm.max = this._linebreakMatrixDims.length + 1;
     }
 
     SetLinebreak(linebreak = 0) {

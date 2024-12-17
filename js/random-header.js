@@ -17,7 +17,7 @@ export class RandomHeader {
 
     constructor() {
         this.Setup();
-        //setInterval(() => this.AnimateHeader(), 300);
+        setInterval(() => this.AnimateHeader(), 300);
     }
 
     Setup() {
