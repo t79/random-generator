@@ -22,10 +22,10 @@ export class Generator extends BaseClass {
     _distCauchy = {local: 0, scale: 1, clip: 4};
     _distChiSquare = {dof: 4, p2: 0, clip: 8};
     _distGamma = {shape: 9, scale: 0.5, clip: 16};
-    _distInvGamma = {shape: 0, scale: 0, clip: 3};
-    _distLogNormal = {mu: 0, sigma: 0, clip: 3};
-    _distParetoScale = {scale: 0, shape: 0, clip: 3};
-    _distWeibull = {shape: 0, scale: 0, clip: 3};
+    _distInvGamma = {alpha: 1, beta: 1, clip: 3};
+    _distLogNormal = {mu: 0, sigma: 0.25, clip: 2.5};
+    _distStudentt = {dof: 1, p2: 0, clip: 3};
+    _distWeibull = {shape: 1.5, scale: 1, clip: 3.5};
 
 
     _HALF_TWO_PI_LOG = -0.91893853320467274180;
@@ -101,13 +101,13 @@ export class Generator extends BaseClass {
             return this._distGamma.shape;
         }
         else if (this._distribution == 7) {
-            return this._distInvGamma.shape;
+            return this._distInvGamma.alpha;
         }
         else if (this._distribution == 8) {
             return this._distLogNormal.mu;
         }
         else if (this._distribution == 9) {
-            return this._distPareto.scale;
+            return this._distStudentt.dof;
         }
         else if (this._distribution == 10) {
             return this._distWeibull.shape;
@@ -131,13 +131,13 @@ export class Generator extends BaseClass {
             this._distGamma.shape = value;
         }
         else if (this._distribution == 7) {
-            this._distInvGamma.shape = value;
+            this._distInvGamma.alpha = value;
         }
         else if (this._distribution == 8) {
             this._distLogNormal.mu = value;
         }
         else if (this._distribution == 9) {
-            this._distPareto.scale = value;
+            this._distStudentt.dof = value;
         }
         else if (this._distribution == 10) {
             this._distWeibull.shape = value;
@@ -162,13 +162,13 @@ export class Generator extends BaseClass {
             return this._distGamma.scale;
         }
         else if (this._distribution == 7) {
-            return this._distInvGamma.scale;
+            return this._distInvGamma.beta;
         }
         else if (this._distribution == 8) {
             return this._distLogNormal.sigma;
         }
         else if (this._distribution == 9) {
-            return this._distPareto.shape;
+            return this._distStudentt.p2;
         }
         else if (this._distribution == 10) {
             return this._distWeibull.scale;
@@ -185,21 +185,22 @@ export class Generator extends BaseClass {
         else if (this._distribution == 4) {
             this._distCauchy.scale = value;
         }
-        else if (this._distribution == 5) {
+        else if (this._distribution == 6) {
             this._distGamma.scale = value;
         }
-        else if (this._distribution == 6) {
-            this._distInvGamma.scale = value;
-        }
         else if (this._distribution == 7) {
-            this._distLogNormal.signal = value;
+            this._distInvGamma.beta = value;
         }
         else if (this._distribution == 8) {
-            this._distPareto.shape = value;
+            this._distLogNormal.sigma = value;
         }
         else if (this._distribution == 9) {
+            this._distStudentt.p2 = value;
+        }
+        else if (this._distribution == 10) {
             this._distWeibull.scale = value;
         }
+
         this.GenerateRawValues();
     }
 
@@ -226,7 +227,7 @@ export class Generator extends BaseClass {
             return this._distLogNormal.clip;
         }
         else if (this._distribution == 9) {
-            return this._distPareto.clip;
+            return this._distStudentt.clip;
         }
         else if (this._distribution == 10) {
             return this._distWeibull.clip;
@@ -256,7 +257,7 @@ export class Generator extends BaseClass {
             this._distLogNormal.clip = value;
         }
         else if (this._distribution == 9) {
-            this._distPareto.clip= value;
+            this._distStudentt.clip= value;
         }
         else if (this._distribution == 10) {
             this._distWeibull.clip = value;
@@ -337,16 +338,53 @@ export class Generator extends BaseClass {
             });
         }
         else if (this._distribution == 7) {
-            value = jStat.invgamma.cdf( value, this._distInvGammaShape, this._distInvGammaScale );
+            this._rawSequence = Array.from({length: this._sequenceLength}, () => {
+                let value = 0;
+                do {
+                    value = jStat.invgamma.sample( this._distInvGamma.alpha, this._distInvGamma.beta );
+                    value /= this._distInvGamma.clip;
+                } while ( value < 0 || value >= 1 )
+                value *= this._rangeEnd - this._rangeStart;
+                value += this._rangeStart;
+                return value;
+            });
         }
         else if (this._distribution == 8) {
-            value = jStat.lognormal.cdf( value, this._distLogNormalMu, this._distLogNormalSignal);
+            this._rawSequence = Array.from({length: this._sequenceLength}, () => {
+                let value = 0;
+                do {
+                    value = jStat.lognormal.sample( this._distLogNormal.mu, this._distLogNormal.sigma);
+                    value /= this._distLogNormal.clip;
+                } while ( value < 0 || value >= 1 )
+                value *= this._rangeEnd - this._rangeStart;
+                value += this._rangeStart;
+                return value;
+            });
         }
         else if (this._distribution == 9) {
-            value = jStat.pareto.cdf( value, this._distParetoScale, this._distParetoShape);
+            this._rawSequence = Array.from({length: this._sequenceLength}, () => {
+                let value = 0;
+                do {
+                    value = jStat.studentt.sample( this._distStudentt.dof);
+                    value /= this._distStudentt.clip * 2;
+                    value += 0.5;
+                } while ( value < 0 || value >= 1 )
+                value *= this._rangeEnd - this._rangeStart;
+                value += this._rangeStart;
+                return value;
+            });
         }
         else if (this._distribution == 10) {
-            value = jStat.weibull.cdf( value, this._distWeibullScale, this._distWeibullShape);
+            this._rawSequence = Array.from({length: this._sequenceLength}, () => {
+                let value = 0;
+                do {
+                    value = jStat.weibull.sample( this._distWeibull.scale, this._distWeibull.shape);
+                    value /= this._distLogNormal.clip;
+                } while ( value < 0 || value >= 1 )
+                value *= this._rangeEnd - this._rangeStart;
+                value += this._rangeStart;
+                return value;
+            });
         }
 
         this.GenerateValues();

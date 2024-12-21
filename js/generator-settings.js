@@ -238,15 +238,19 @@ export class GeneratorSettings {
         }
         else if (distribution == 7) {
             this.HighlightSelected(this._distributionGammaInvElm);
+            this.UpdateDistributionParameters([0.001, 5], [0.001, 3], 5, true, true, true);
         }
         else if (distribution == 8) {
             this.HighlightSelected(this._distributionLogNormalElm);
+            this.UpdateDistributionParameters([-5, 2], [0, 3], 3, true, true, true);
         }
         else if (distribution == 9) {
             this.HighlightSelected(this._distributionParetoElm);
+            this.UpdateDistributionParameters([0, 5], [0, 0], 6, true, false, true);
         }
         else if (distribution == 10) {
             this.HighlightSelected(this._distributionWeibullElm);
+            this.UpdateDistributionParameters([0.001, 10], [0.001, 5], 5, true, true, true);
         }
 
         if (parseInt(this._distributionSliderElm.value) != this._distribution) {
