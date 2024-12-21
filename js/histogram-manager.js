@@ -123,6 +123,18 @@ export class HistogramManager {
                 .attr("height", d => (height - 10) - y(d.length))
                 .attr("fill", "var(--histogram-color)"));
 
+        const mean = d3.mean(data, (d) => d.length);
+
+        svg.append("g")
+            .selectAll("rect")
+            .data([1.0])
+            .join("rect")
+            .attr("x", (d, i) => i * binWidth + 10)
+            .attr("y", d => y(d * mean))
+            .attr("width", width - 20)
+            .attr("height", 4)
+            .attr("fill", "#e11f26");
+
         this._histogramElm.innerHTML = "";
         this._histogramElm.appendChild(svg.node());
     }

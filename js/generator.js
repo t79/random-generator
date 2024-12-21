@@ -6,7 +6,6 @@ export class Generator extends BaseClass {
     _rangeStart = 1;
     _rangeEnd = 100;
     _sequenceLength = 1000;
-    _isEndIncluded = false;
     _valueDecimalState = 1;
     _valueDecimalLength = 0;
     _distribution = 1;
@@ -17,8 +16,17 @@ export class Generator extends BaseClass {
     _sd = 0.25;
     _variance = 0.25;
 
-    _betaDistAlpha = 0.5;
-    _betaDistBeta = 0.5;
+    _distUniform = {p1: 0, p2: 0, clip: 0};
+    _distNormal = {mean: 0, sd: 1, clip: 3};
+    _distBeta = {alpha: 2, beta: 2, clip: 1};
+    _distCauchy = {local: 0, scale: 1, clip: 4};
+    _distChiSquare = {dof: 4, p2: 0, clip: 8};
+    _distGamma = {shape: 9, scale: 0.5, clip: 16};
+    _distInvGamma = {shape: 0, scale: 0, clip: 3};
+    _distLogNormal = {mu: 0, sigma: 0, clip: 3};
+    _distParetoScale = {scale: 0, shape: 0, clip: 3};
+    _distWeibull = {shape: 0, scale: 0, clip: 3};
+
 
     _HALF_TWO_PI_LOG = -0.91893853320467274180;
 
@@ -43,10 +51,6 @@ export class Generator extends BaseClass {
         this.GenerateRawValues();
     }
 
-    set IsEndIncluded(value) {
-        this._isEndIncluded = value;
-    }
-
     get ValueDecimalState() {
         return this._valueDecimalState;
     }
@@ -68,16 +72,6 @@ export class Generator extends BaseClass {
         this.GenerateRawValues();
     }
 
-    set BetaDistributionAlpha(value) {
-        this._betaDistAlpha = value;
-        this.GenerateRawValues();
-    }
-
-    set BetaDistributionBeta(value) {
-        this._betaDistBeta = value;
-        this.GenerateRawValues();
-    }
-
     get RandomSequence() {
         return this._sequence;
     }
@@ -90,6 +84,186 @@ export class Generator extends BaseClass {
         return this.GenerateRandomFloatValue();
     }
 
+    get FirstParameter() {
+        if (this._distribution == 2) {
+            return this._distNormal.mean;
+        }
+        else if (this._distribution == 3) {
+            return this._distBeta.alpha;
+        }
+        else if (this._distribution == 4) {
+            return this._distCauchy.local;
+        }
+        else if (this._distribution == 5) {
+            return this._distChiSquare.dof;
+        }
+        else if (this._distribution == 6) {
+            return this._distGamma.shape;
+        }
+        else if (this._distribution == 7) {
+            return this._distInvGamma.shape;
+        }
+        else if (this._distribution == 8) {
+            return this._distLogNormal.mu;
+        }
+        else if (this._distribution == 9) {
+            return this._distPareto.scale;
+        }
+        else if (this._distribution == 10) {
+            return this._distWeibull.shape;
+        }
+    }
+
+    set FirstParameter(value) {
+        if (this._distribution == 2) {
+            this._distNormal.mean = value;
+        }
+        else if (this._distribution == 3) {
+            this._distBeta.alpha = value;
+        }
+        else if (this._distribution == 4) {
+            this._distCauchy.local = value;
+        }
+        else if (this._distribution == 5) {
+            this._distChiSquare.dof = value;
+        }
+        else if (this._distribution == 6) {
+            this._distGamma.shape = value;
+        }
+        else if (this._distribution == 7) {
+            this._distInvGamma.shape = value;
+        }
+        else if (this._distribution == 8) {
+            this._distLogNormal.mu = value;
+        }
+        else if (this._distribution == 9) {
+            this._distPareto.scale = value;
+        }
+        else if (this._distribution == 10) {
+            this._distWeibull.shape = value;
+        }
+        this.GenerateRawValues();
+    }
+
+    get SecondParameter() {
+        if (this._distribution == 2) {
+            return Math.sqrt(this._distNormal.sd);
+        }
+        else if (this._distribution == 3) {
+            return this._distBeta.beta;
+        }
+        else if (this._distribution == 4) {
+            return this._distCauchy.scale;
+        }
+        else if (this._distribution == 5) {
+            return this._distChiSquare.p2;
+        }
+        else if (this._distribution == 6) {
+            return this._distGamma.scale;
+        }
+        else if (this._distribution == 7) {
+            return this._distInvGamma.scale;
+        }
+        else if (this._distribution == 8) {
+            return this._distLogNormal.sigma;
+        }
+        else if (this._distribution == 9) {
+            return this._distPareto.shape;
+        }
+        else if (this._distribution == 10) {
+            return this._distWeibull.scale;
+        }
+    }
+
+    set SecondParameter(value) {
+        if (this._distribution == 2) {
+            this._distNormal.sd = Math.pow(value, 2);
+        }
+        else if (this._distribution == 3) {
+            this._distBeta.beta = value;
+        }
+        else if (this._distribution == 4) {
+            this._distCauchy.scale = value;
+        }
+        else if (this._distribution == 5) {
+            this._distGamma.scale = value;
+        }
+        else if (this._distribution == 6) {
+            this._distInvGamma.scale = value;
+        }
+        else if (this._distribution == 7) {
+            this._distLogNormal.signal = value;
+        }
+        else if (this._distribution == 8) {
+            this._distPareto.shape = value;
+        }
+        else if (this._distribution == 9) {
+            this._distWeibull.scale = value;
+        }
+        this.GenerateRawValues();
+    }
+
+    get ThirdParameter() {
+        if (this._distribution == 2) {
+            return this._distNormal.clip;
+        }
+        else if (this._distribution == 3) {
+            return this._distBeta.clip;
+        }
+        else if (this._distribution == 4) {
+            return this._distCauchy.clip;
+        }
+        else if (this._distribution == 5) {
+            return this._distChiSquare.clip;
+        }
+        else if (this._distribution == 6) {
+            return this._distGamma.clip;
+        }
+        else if (this._distribution == 7) {
+            return this._distInvGamma.clip;
+        }
+        else if (this._distribution == 8) {
+            return this._distLogNormal.clip;
+        }
+        else if (this._distribution == 9) {
+            return this._distPareto.clip;
+        }
+        else if (this._distribution == 10) {
+            return this._distWeibull.clip;
+        }
+    }
+
+    set ThirdParameter(value) {
+        if (this._distribution == 2) {
+            this._distNormal.clip = value;
+        }
+        else if (this._distribution == 3) {
+            this._distBeta.clip = value;
+        }
+        else if (this._distribution == 4) {
+            this._distCauchy.clip = value;
+        }
+        else if (this._distribution == 5) {
+            this._distChiSquare.clip = value;
+        }
+        else if (this._distribution == 6) {
+            this._distGamma.clip = value;
+        }
+        else if (this._distribution == 7) {
+            this._distInvGamma.clip = value;
+        }
+        else if (this._distribution == 8) {
+            this._distLogNormal.clip = value;
+        }
+        else if (this._distribution == 9) {
+            this._distPareto.clip= value;
+        }
+        else if (this._distribution == 10) {
+            this._distWeibull.clip = value;
+        }
+        this.GenerateRawValues();
+    }
+
 
     constructor() {
         super();
@@ -98,10 +272,83 @@ export class Generator extends BaseClass {
     }
 
     GenerateRawValues() {
-        this._rawSequence = [];
-        for (let i = 0; i < this._sequenceLength; i++) {
-            this._rawSequence.push(this.GenerateRandomFloatValue());
+
+        if (this._distribution == 1) {
+            this._rawSequence = Array.from({length: this._sequenceLength}, () => {
+                return jStat.uniform.sample(this._rangeStart, this._rangeEnd);
+            });
         }
+        else if (this._distribution == 2) {
+            this._rawSequence = Array.from({length: this._sequenceLength}, () => {
+                let value = 0;
+                do {
+                    value = jStat.normal.sample(this._distNormal.mean, this._distNormal.sd);
+                    value /= this._distNormal.clip * 2 
+                    value += 0.5;
+                } while( value < 0 || value >= 1 )
+                value *= this._rangeEnd - this._rangeStart;
+                value += this._rangeStart;
+                return value;
+            });
+        }
+        else if (this._distribution == 3) {
+            this._rawSequence = Array.from({length: this._sequenceLength}, () => {
+                let value = jStat.beta.sample( this._distBeta.alpha, this._distBeta.beta );
+                value *= this._rangeEnd - this._rangeStart;
+                value += this._rangeStart;
+                return value;
+            });
+        }
+        else if (this._distribution == 4) {
+            this._rawSequence = Array.from({length: this._sequenceLength}, () => {
+                let value = 0;
+                do {
+                    value = jStat.cauchy.sample( this._distCauchy.local, this._distCauchy.scale );
+                    value /= this._distCauchy.clip * 2;
+                    value += 0.5;
+                } while ( value < 0 || value >= 1 )
+                value *= this._rangeEnd - this._rangeStart;
+                value += this._rangeStart;
+                return value;
+            });
+        }
+        else if (this._distribution == 5) {
+            this._rawSequence = Array.from({length: this._sequenceLength}, () => {
+                let value = 0;
+                do {
+                    value = jStat.chisquare.sample(this._distChiSquare.dof);
+                    value /= this._distChiSquare.clip;
+                } while ( value < 0 || value >= 1 )
+                value *= this._rangeEnd - this._rangeStart;
+                value += this._rangeStart;
+                return value;
+            });
+        }
+        else if (this._distribution == 6) {
+            this._rawSequence = Array.from({length: this._sequenceLength}, () => {
+                let value = 0;
+                do {
+                    value = jStat.gamma.sample(this._distGamma.shape, this._distGamma.scale );
+                    value /= this._distGamma.clip;
+                } while ( value < 0 || value >= 1 )
+                value *= this._rangeEnd - this._rangeStart;
+                value += this._rangeStart;
+                return value;
+            });
+        }
+        else if (this._distribution == 7) {
+            value = jStat.invgamma.cdf( value, this._distInvGammaShape, this._distInvGammaScale );
+        }
+        else if (this._distribution == 8) {
+            value = jStat.lognormal.cdf( value, this._distLogNormalMu, this._distLogNormalSignal);
+        }
+        else if (this._distribution == 9) {
+            value = jStat.pareto.cdf( value, this._distParetoScale, this._distParetoShape);
+        }
+        else if (this._distribution == 10) {
+            value = jStat.weibull.cdf( value, this._distWeibullScale, this._distWeibullShape);
+        }
+
         this.GenerateValues();
     }
 
@@ -134,19 +381,41 @@ export class Generator extends BaseClass {
         }
     }
 
-    GenerateRandomFloatValue() {
-        let value = 0;
-        if (this._distribution == 1) {
-            value = this.UniformDistribution();
-        }
-        else if (this._distribution == 2) {
-            value = this.NormalDistributionSd1();
+    GenerateRandomFloatValue(x = Math.random()) {
+
+        let value = x;
+
+        if (this._distribution == 2) {
+            this._rawSequence = Array.from({length: this._sequenceLength}, () => {
+                let value = jStat.normal.sample(this._distNormalMean, this._distNormalStd) / 6 + 0.5;
+                value *= this._rangeEnd - this._rangeStart;
+                value += this._rangeStart;
+                return value;
+            });
         }
         else if (this._distribution == 3) {
-            value = this.NormalDistribution();
+            value = jStat.beta.sample( this._distBetaAlpha, this._distBetaBeta );
         }
         else if (this._distribution == 4) {
-            value = this.BetaDistribution3();
+            value = jStat.cauchy.sample( this._distCauchyLocal, this._distCauchyScale );
+        }
+        else if (this._distribution == 5) {
+            value = jStat.chisquare.cdf( value, this._distChiSquareDof);
+        }
+        else if (this._distribution == 6) {
+            value = jStat.gamma.cdf( value, this._distGammaShape, this._distGammaScale );
+        }
+        else if (this._distribution == 7) {
+            value = jStat.invgamma.cdf( value, this._distInvGammaShape, this._distInvGammaScale );
+        }
+        else if (this._distribution == 8) {
+            value = jStat.lognormal.cdf( value, this._distLogNormalMu, this._distLogNormalSignal);
+        }
+        else if (this._distribution == 9) {
+            value = jStat.pareto.cdf( value, this._distParetoScale, this._distParetoShape);
+        }
+        else if (this._distribution == 10) {
+            value = jStat.weibull.cdf( value, this._distWeibullScale, this._distWeibullShape);
         }
 
         value *= this._rangeEnd - this._rangeStart;
@@ -236,12 +505,12 @@ export class Generator extends BaseClass {
     }
 
     BetaDistribution3() {
-        return jStat.beta.cdf( Math.random(), this._betaDistAlpha, this._betaDistBeta );
+        return jStat.beta.cdf( Math.random(), this._distBetaAlpha, this._distBetaBeta );
     }
 
     BetaDistribution2() {
-        const alpha = this._betaDistAlpha;
-        const beta = this._betaDistBeta;
+        const alpha = this._distBetaAlpha;
+        const beta = this._distBetaBeta;
         const uniform = Math.random();
         const s = alpha + beta;
 

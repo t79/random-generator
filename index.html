@@ -115,49 +115,63 @@
                                 <div class="settings-option">
                                     <span id="settings-normal-label">Normal</span>
                                 </div>
-    
-                                <div id="settings-more-container" class="settings-more-block">
-                                    <div class="settings-option">
-                                        <span id="settings-more-label">More</span>
+
+                                <div class="settings-option">
+                                    <span id="settings-beta-label">Beta</span>
+                                </div>
+
+                                <div class="settings-option">
+                                    <span id="settings-cauchy-label">Cauchy</span>
+                                </div>
+
+                                <div class="settings-option">
+                                    <span id="settings-chi-squared-label">Chi Squared</span>
+                                </div>
+
+                                <div class="settings-option">
+                                    <span id="settings-gamma-label">Gamma</span>
+                                </div>
+
+                                <div class="settings-option">
+                                    <span id="settings-gamma-inv-label">Gamma <span class="settings-small-text">invert</span></span>
+                                </div>
+
+                                <div class="settings-option">
+                                    <span id="settings-log-normal-label">Log Normal</span>
+                                </div>
+
+                                <div class="settings-option">
+                                    <span id="settings-pareto-label">Pareto</span>
+                                </div>
+
+                                <div class="settings-option">
+                                    <span id="settings-weibull-label">Weibull</span>
+                                </div>
+
+                                <div class="settings-option">
+                                    <div class="settings-parameter">
+                                        <span id="settings-distribution-parameter-1-header">Normal Mean</span>
+                                        <input class="settings-slider-small" id="settings-distribution-parameter-1-slider" type="range" min="0" max="4" step="0.1" value="0">
                                     </div>
-                                    <div id="settings-more-pulldown" class="settings-more-block">
-                                        <div class="settings-option">
-                                            <span id="settings-normal2-label">Normal</span>
-                                        </div>
-                                        <div class="settings-option">
-                                            <input id="length-digits" type="text" readonly value="0">
-                                            <div class="settings-small-input">
-                                                <span>Mean</span>
-                                                <input class="settings-slider-small" id="length-digits-slider2" type="range" min="-5" max="5" step="0.1" value="0">
-                                            </div>
-                                        </div>
-                                        <div class="settings-option">
-                                            <input id="length-digits" type="text" readonly value="0">
-                                            <div class="settings-small-input">
-                                                <span>Mean</span>
-                                                <input class="settings-slider-small" id="length-digits-slider2" type="range" min="-5" max="5" step="0.1" value="0">
-                                            </div>
-                                        </div>
-                                        <div class="settings-option">
-                                            <input id="length-digits" type="text" readonly value="0">
-                                            <input class="settings-slider-small" id="length-digits-slider2" type="range" min="0" max="15" value="0">
-                                        </div>
-                                        <div class="settings-option">
-                                            Beta
-                                        </div>
-                                        <div class="settings-option">
-                                            <input id="length-digits" type="text" readonly value="0">
-                                            <input class="settings-slider-small" id="settings-beta-alpha-slider" type="range" min="0.1" max="4" step="0.1" value="0.5">
-                                        </div>
-                                        <div class="settings-option">
-                                            <input id="length-digits" type="text" readonly value="0">
-                                            <input class="settings-slider-small" id="settings-beta-beta-slider" type="range" min="0.1" max="4" step="0.1" value="0.5">
-                                        </div>
+                                    <input id="settings-distribution-parameter-1" class="settings-distribution-field" type="number" value="0" step="0.1">
+                                </div>
+                                <div class="settings-option">
+                                    <div class="settings-parameter">
+                                        <span id="settings-distribution-parameter-2-header">Normal Variance</span>
+                                        <input class="settings-slider-small" id="settings-distribution-parameter-2-slider" type="range" min="0" max="4" step="0.1" value="0">
                                     </div>
+                                    <input id="settings-distribution-parameter-2" class="settings-distribution-field" type="number" value="0" step="0.1">
+                                </div>
+                                <div class="settings-option">
+                                    <div class="settings-parameter">
+                                        <span id="settings-distribution-parameter-3-header">Clip range</span>
+                                        <input class="settings-slider-small" id="settings-distribution-parameter-3-slider" type="range" min="0.1" max="5" step="0.05" value="3">
+                                    </div>
+                                    <input id="settings-distribution-parameter-3" class="settings-distribution-field" type="text" value="[ -3, 3 ]">
                                 </div>
     
                                 <div class="setttings-slider-options">
-                                    <input type="range" class="settings-slider" id="distribution-slider" min="1" max="2" value="1">
+                                    <input type="range" class="settings-slider" id="distribution-slider" min="1" max="10" value="1">
                                 </div>
     
                             </div>
@@ -226,10 +240,6 @@
                                 <div class="settings-slider-option">
                                     <input type="range" class="settings-slider" id="linebreak-slider" min="0" max="0" value="0" step="1">
                                 </div>
-                            </div>
-        
-                            
-                            <div class="setting-block">
                             </div>
                         </div>
                     </div>

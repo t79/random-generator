@@ -20,7 +20,7 @@ export class RandomGenerator {
     }
 
     Setup() {
-        this._header = new RandomHeader();
+        //this._header = new RandomHeader();
         this._numberSequence = new NumberSequence();
     }
 

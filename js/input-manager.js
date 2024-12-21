@@ -74,7 +74,7 @@ export class InputManager extends BaseClass {
     }
 
     SetNumberOfValues() {
-        const value = this._countValueInputElm.value;
+        const value = parseInt(this._countValueInputElm.value);
         if (value != this._valueCount) {
             if (this._matrixMode) {
                 this._valueCount = value * this._matrixSize;
@@ -115,7 +115,7 @@ export class InputManager extends BaseClass {
     }
 
     SetStartValue() {
-        const value = this._startValueInputElm.value;
+        const value = parseFloat(this._startValueInputElm.value);
         if (value !== this._valueStart) {
             this._valueStart = value;
             this.DispatchEvent("StartValueChanged");
@@ -123,7 +123,7 @@ export class InputManager extends BaseClass {
     }
 
     SetEndValue() {
-        const value = this._endValueInputElm.value;
+        const value = parseFloat(this._endValueInputElm.value);
         if (value !== this._valueEnd) {
             this._valueEnd = value;
             this.DispatchEvent("EndValueChanged");
