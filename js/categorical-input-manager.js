@@ -103,37 +103,6 @@ export class CategoricalInputManager extends BaseClass {
         this._groupContainerElm.insertBefore(group, this._addGroupButtonElm);
     }
 
-    Generate()  {
-        const elements = [];
-        const probabilities = [];
-        let probability = 0;
-        for (let i = 0; i < this._groups.length; i++) {
-            const group = this._groups[i];
-            const groupElements = group.elementsElm.value.split(",");
-            const groupProbability = parseFloat(group.probabilityElm.value);
-            for (let j = 0; j < groupElements.length; j++) {
-                const element = groupElements[j].trim();
-                if (element.length > 0) {
-                    elements.push(element);
-                    probability += groupProbability;
-                    probabilities.push(probability);
-                }
-            }
-        }
-
-        // const random = Math.random() * probability;
-        // for (let i = 0; i < probabilities.length; i++) {
-        //     if (random < probabilities[i]) {
-        //         return elements[i];
-        //     }
-        // }
-
-        const p = probabilities.map((value) => value / probability)
-
-        console.log(elements);
-        console.log(p);
-    }
-
     GroupChanged(group) {
         console.log("Group changed: ", group.id)
 
@@ -191,7 +160,6 @@ export class CategoricalInputManager extends BaseClass {
         }
         this._probabilitiesArray = probabilityArray.map((value) => value / probability);
 
-        console.log("Elements and probability changed");
         this.DispatchEvent("ElementsAndProbabilityChanged");
     }
 
