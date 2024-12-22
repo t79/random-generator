@@ -21,7 +21,7 @@ export class CategoricalGenerator extends BaseClass{
 
     set SequenceLength(value) {
         this._sequenceLength = value;
-        GenerateRawSequence();
+        this.GenerateRawSequence();
     }
 
     get Sequence() {
