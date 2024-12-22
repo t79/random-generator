@@ -19,6 +19,11 @@ export class CategoricalGenerator extends BaseClass{
         this._probabilityArray = value;
     }
 
+    set SequenceLength(value) {
+        this._sequenceLength = value;
+        GenerateRawSequence();
+    }
+
     get Sequence() {
         return this._rawSequence;
     }
