@@ -5,6 +5,7 @@ export class FormatterSettings {
 
     _formatter;
     _inputManager;
+    _categoricalInputManager;
     _formatSliderElm;
     _formatSingleLabelElm;
     _formatListLabelElm;
@@ -15,9 +16,10 @@ export class FormatterSettings {
     _linebreakLabelElm;
     _linebreakMatrixDims = [2];
 
-    constructor(formatter, inputManager) {
+    constructor(formatter, inputManager, categoricalInputManager) {
         this._formatter = formatter;
         this._inputManager = inputManager;
+        this._categoricalInputManager = categoricalInputManager;
         this.Setup();
     }
 

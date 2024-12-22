@@ -293,12 +293,5 @@ export class GeneratorSettings {
     SetNormalDistributionMean() {
         this._generator.NormalDistributionMean = parseFloat(this._normalDistributionMeanInputElm.value);
     }
-
-
-
-
-
-
-
-
+    
 }

@@ -268,8 +268,6 @@ export class Generator extends BaseClass {
 
     constructor() {
         super();
-
-        this.NormalizeNormalDistribution();
     }
 
     GenerateRawValues() {
@@ -391,12 +389,12 @@ export class Generator extends BaseClass {
     }
 
     GenerateValues() {
-        this._sequence = [];
-        for (let i = 0; i < this._sequenceLength; i++) {
-            let value = this._rawSequence[i];
-            value = this.TruncateValue(value);
-            this._sequence.push(value);
-        }
+        this._sequence = this._rawSequence.map(value => this.TruncateValue(value));
+        // for (let i = 0; i < this._sequenceLength; i++) {
+        //     let value = this._rawSequence[i];
+        //     value = this.TruncateValue(value);
+        //     this._sequence.push(value);
+        // }
         this.DispatchEvent("SequenceChanged");
     }
 
@@ -419,193 +417,193 @@ export class Generator extends BaseClass {
         }
     }
 
-    GenerateRandomFloatValue(x = Math.random()) {
+    // GenerateRandomFloatValue(x = Math.random()) {
 
-        let value = x;
+    //     let value = x;
 
-        if (this._distribution == 2) {
-            this._rawSequence = Array.from({length: this._sequenceLength}, () => {
-                let value = jStat.normal.sample(this._distNormalMean, this._distNormalStd) / 6 + 0.5;
-                value *= this._rangeEnd - this._rangeStart;
-                value += this._rangeStart;
-                return value;
-            });
-        }
-        else if (this._distribution == 3) {
-            value = jStat.beta.sample( this._distBetaAlpha, this._distBetaBeta );
-        }
-        else if (this._distribution == 4) {
-            value = jStat.cauchy.sample( this._distCauchyLocal, this._distCauchyScale );
-        }
-        else if (this._distribution == 5) {
-            value = jStat.chisquare.cdf( value, this._distChiSquareDof);
-        }
-        else if (this._distribution == 6) {
-            value = jStat.gamma.cdf( value, this._distGammaShape, this._distGammaScale );
-        }
-        else if (this._distribution == 7) {
-            value = jStat.invgamma.cdf( value, this._distInvGammaShape, this._distInvGammaScale );
-        }
-        else if (this._distribution == 8) {
-            value = jStat.lognormal.cdf( value, this._distLogNormalMu, this._distLogNormalSignal);
-        }
-        else if (this._distribution == 9) {
-            value = jStat.pareto.cdf( value, this._distParetoScale, this._distParetoShape);
-        }
-        else if (this._distribution == 10) {
-            value = jStat.weibull.cdf( value, this._distWeibullScale, this._distWeibullShape);
-        }
+    //     if (this._distribution == 2) {
+    //         this._rawSequence = Array.from({length: this._sequenceLength}, () => {
+    //             let value = jStat.normal.sample(this._distNormalMean, this._distNormalStd) / 6 + 0.5;
+    //             value *= this._rangeEnd - this._rangeStart;
+    //             value += this._rangeStart;
+    //             return value;
+    //         });
+    //     }
+    //     else if (this._distribution == 3) {
+    //         value = jStat.beta.sample( this._distBetaAlpha, this._distBetaBeta );
+    //     }
+    //     else if (this._distribution == 4) {
+    //         value = jStat.cauchy.sample( this._distCauchyLocal, this._distCauchyScale );
+    //     }
+    //     else if (this._distribution == 5) {
+    //         value = jStat.chisquare.cdf( value, this._distChiSquareDof);
+    //     }
+    //     else if (this._distribution == 6) {
+    //         value = jStat.gamma.cdf( value, this._distGammaShape, this._distGammaScale );
+    //     }
+    //     else if (this._distribution == 7) {
+    //         value = jStat.invgamma.cdf( value, this._distInvGammaShape, this._distInvGammaScale );
+    //     }
+    //     else if (this._distribution == 8) {
+    //         value = jStat.lognormal.cdf( value, this._distLogNormalMu, this._distLogNormalSignal);
+    //     }
+    //     else if (this._distribution == 9) {
+    //         value = jStat.pareto.cdf( value, this._distParetoScale, this._distParetoShape);
+    //     }
+    //     else if (this._distribution == 10) {
+    //         value = jStat.weibull.cdf( value, this._distWeibullScale, this._distWeibullShape);
+    //     }
 
-        value *= this._rangeEnd - this._rangeStart;
-        value += this._rangeStart;
+    //     value *= this._rangeEnd - this._rangeStart;
+    //     value += this._rangeStart;
 
-        return value;
-    }
+    //     return value;
+    // }
 
-    UniformDistribution() {
-        return Math.random();
-    }   
+    // UniformDistribution() {
+    //     return Math.random();
+    // }   
 
-    NormalDistributionSd1() {
-        let u = 0, v = 0;
-        while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
-        while(v === 0) v = Math.random();
-        let num = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
-        num = num / 10.0 + 0.5; // Translate to 0 -> 1
-        if (num > 1 || num < 0) return this.NormalDistributionSd1() // resample between 0 and 1
-        return num
-    }
+    // NormalDistributionSd1() {
+    //     let u = 0, v = 0;
+    //     while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
+    //     while(v === 0) v = Math.random();
+    //     let num = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+    //     num = num / 10.0 + 0.5; // Translate to 0 -> 1
+    //     if (num > 1 || num < 0) return this.NormalDistributionSd1() // resample between 0 and 1
+    //     return num
+    // }
 
-    NormalizeNormalDistribution() {
-        let x0 = this.NormalDistribution(0.0000000001);
-        let x1 = this.NormalDistribution(1);
+    // NormalizeNormalDistribution() {
+    //     let x0 = this.NormalDistribution(0.0000000001);
+    //     let x1 = this.NormalDistribution(1);
 
-        console.log(x0, x1);
-    }
-
-
-    NormalDistribution(x = -1) {
-        let u = x;
-        let v = x;
-        if (x === -1) {
-            do {
-                u = Math.random();
-            } while (u === 0);
-            do {
-                v = Math.random();
-            } while (v === 0);
-        }
-
-        let num = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
-        num /= 10;
-        num += 2;
-        //if (num > 1 || num < 0) return this.NormalDistribution() // resample between 0 and 1
-        return num * this._sd + this._mean;
-
-        var m = this._sd * Math.sqrt(2 * Math.PI);
-        var e = Math.exp(-Math.pow(x - this._mean, 2) / (2 * this._variance));
-        console.log(e / m);
-        return e / m;
-
-        if (x === -1) {
-            do {
-                x = Math.random();
-            } while (x === 0);
-        }
-        //let num = Math.exp(this._HALF_TWO_PI_LOG - Math.log(this._sd) - Math.pow(x - this._mean, 2)) / (2 * this._variance);
-        return num
-    }
+    //     console.log(x0, x1);
+    // }
 
 
+    // NormalDistribution(x = -1) {
+    //     let u = x;
+    //     let v = x;
+    //     if (x === -1) {
+    //         do {
+    //             u = Math.random();
+    //         } while (u === 0);
+    //         do {
+    //             v = Math.random();
+    //         } while (v === 0);
+    //     }
 
-    BetaDistribution() {
+    //     let num = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+    //     num /= 10;
+    //     num += 2;
+    //     //if (num > 1 || num < 0) return this.NormalDistribution() // resample between 0 and 1
+    //     return num * this._sd + this._mean;
+
+    //     var m = this._sd * Math.sqrt(2 * Math.PI);
+    //     var e = Math.exp(-Math.pow(x - this._mean, 2) / (2 * this._variance));
+    //     console.log(e / m);
+    //     return e / m;
+
+    //     if (x === -1) {
+    //         do {
+    //             x = Math.random();
+    //         } while (x === 0);
+    //     }
+    //     //let num = Math.exp(this._HALF_TWO_PI_LOG - Math.log(this._sd) - Math.pow(x - this._mean, 2)) / (2 * this._variance);
+    //     return num
+    // }
+
+
+
+    // BetaDistribution() {
         
-        return Math.exp(this.BetaLog1(Math.random(), 10, 10))
-    }
+    //     return Math.exp(this.BetaLog1(Math.random(), 10, 10))
+    // }
 
-    BetaLog1(x, a, b) {
-        return ((a-1)*Math.log(x) + (b-1)*Math.log(1-x)) - this.BetaLog2(a,b)
-    }
+    // BetaLog1(x, a, b) {
+    //     return ((a-1)*Math.log(x) + (b-1)*Math.log(1-x)) - this.BetaLog2(a,b)
+    // }
 
-    BetaLog2(a, b) {
-        let foo = 0.0;
+    // BetaLog2(a, b) {
+    //     let foo = 0.0;
     
-        for (let i=0; i<a-2; i++) {
-            foo += Math.log(a-1-i);
-        }
-        for (let i=0; i<b-2; i++) {
-            foo += Math.log(b-1-i);
-        }
-        for (let i=0; i<a+b-2; i++) {
-            foo -= Math.log(a+b-1-i);
-        }
-        return foo
-    }
+    //     for (let i=0; i<a-2; i++) {
+    //         foo += Math.log(a-1-i);
+    //     }
+    //     for (let i=0; i<b-2; i++) {
+    //         foo += Math.log(b-1-i);
+    //     }
+    //     for (let i=0; i<a+b-2; i++) {
+    //         foo -= Math.log(a+b-1-i);
+    //     }
+    //     return foo
+    // }
 
-    BetaDistribution3() {
-        return jStat.beta.cdf( Math.random(), this._distBetaAlpha, this._distBetaBeta );
-    }
+    // BetaDistribution3() {
+    //     return jStat.beta.cdf( Math.random(), this._distBetaAlpha, this._distBetaBeta );
+    // }
 
-    BetaDistribution2() {
-        const alpha = this._distBetaAlpha;
-        const beta = this._distBetaBeta;
-        const uniform = Math.random();
-        const s = alpha + beta;
+    // BetaDistribution2() {
+    //     const alpha = this._distBetaAlpha;
+    //     const beta = this._distBetaBeta;
+    //     const uniform = Math.random();
+    //     const s = alpha + beta;
 
-        const bt = Math.exp(this.LogGamma(s) - this.LogGamma(beta) - this.LogGamma(alpha) + alpha * Math.log(uniform) + beta * Math.log(1 - uniform));
-            //             BT=exp(LogGamma(S)-LogGamma(B)-LogGamma(A)+A*log(Z)+B*log(1-Z));
+    //     const bt = Math.exp(this.LogGamma(s) - this.LogGamma(beta) - this.LogGamma(alpha) + alpha * Math.log(uniform) + beta * Math.log(1 - uniform));
+    //         //             BT=exp(LogGamma(S)-LogGamma(B)-LogGamma(A)+A*log(Z)+B*log(1-Z));
 
 
-        let BetaCDF = 0;
-        if (uniform < (alpha + 1) / (s + 2)) {
-            BetaCDF = bt * this.Betinc(uniform, alpha, beta);
-        } else {
-            BetaCDF = 1 - bt * this.Betinc(1 - uniform, alpha, beta);
-        }
-        BetaCDF += +.000005;
+    //     let BetaCDF = 0;
+    //     if (uniform < (alpha + 1) / (s + 2)) {
+    //         BetaCDF = bt * this.Betinc(uniform, alpha, beta);
+    //     } else {
+    //         BetaCDF = 1 - bt * this.Betinc(1 - uniform, alpha, beta);
+    //     }
+    //     BetaCDF += +.000005;
 
-        if (BetaCDF > 1) {
-            BetaCDF = this.BetaDistribution2();
-        }
-        else if (BetaCDF < 0) {
-            BetaCDF = this.BetaDistribution2();
-        }
+    //     if (BetaCDF > 1) {
+    //         BetaCDF = this.BetaDistribution2();
+    //     }
+    //     else if (BetaCDF < 0) {
+    //         BetaCDF = this.BetaDistribution2();
+    //     }
 
-        return BetaCDF;
-    }
+    //     return BetaCDF;
+    // }
 
-    LogGamma(z) {
-        const s = 1 + 76.18009173 / z - 86.50532033 / (z + 1) + 24.01409822 / (z + 2) - 1.231739516 / (z + 3) + .00120858003 / (z + 4) - .00000536382 / (z + 5);
-        //var S=    1 + 76.18009173 / Z - 86.50532033 / (Z + 1) + 24.01409822 / (Z + 2) - 1.231739516 / (Z + 3) + .00120858003 / (Z + 4) - .00000536382 / (Z + 5);
+    // LogGamma(z) {
+    //     const s = 1 + 76.18009173 / z - 86.50532033 / (z + 1) + 24.01409822 / (z + 2) - 1.231739516 / (z + 3) + .00120858003 / (z + 4) - .00000536382 / (z + 5);
+    //     //var S=    1 + 76.18009173 / Z - 86.50532033 / (Z + 1) + 24.01409822 / (Z + 2) - 1.231739516 / (Z + 3) + .00120858003 / (Z + 4) - .00000536382 / (Z + 5);
 
-        return (z - 0.5) * Math.log(z + 4.5) - (z + 4.5) + Math.log(s * 2.50662827465);
-        //var LG= (Z-.5)*log(Z+4.5)-(Z+4.5)+log(S*2.50662827465);
-    }
+    //     return (z - 0.5) * Math.log(z + 4.5) - (z + 4.5) + Math.log(s * 2.50662827465);
+    //     //var LG= (Z-.5)*log(Z+4.5)-(Z+4.5)+log(S*2.50662827465);
+    // }
 
-    Betinc(uniform, alpha, beta) {
-        let alpha0 = 0, beta0 = 1;
-        let alpha1 = 1, beta1 = 1;
-        let m9 = 0;
-        let alpha2 = 0;
-        let c9;
+    // Betinc(uniform, alpha, beta) {
+    //     let alpha0 = 0, beta0 = 1;
+    //     let alpha1 = 1, beta1 = 1;
+    //     let m9 = 0;
+    //     let alpha2 = 0;
+    //     let c9;
 
-        while (Math.abs((alpha1 - alpha2) / alpha1) > .00001) {
-            alpha2 = alpha1;
-            c9 = -(alpha + m9) * (alpha + beta + m9) * uniform / (alpha + 2 * m9) / (alpha + 2 * m9 + 1);
-            alpha0 = alpha1 + c9 * alpha0;
-            beta0 = beta1 + c9 * beta0;
-            m9 += 1;
-            c9 = m9 * (beta - m9) * uniform / (alpha + 2 * m9 - 1) / (alpha + 2 * m9);
-            alpha1 = alpha0 + c9 * alpha1;
-            beta1 = beta0 + c9 * beta1;
-            alpha0 = alpha0 / beta1;
-            beta0 = beta0 / beta1;
-            alpha1 = alpha1 / beta1;
-            beta1 = 1;
-        }
+    //     while (Math.abs((alpha1 - alpha2) / alpha1) > .00001) {
+    //         alpha2 = alpha1;
+    //         c9 = -(alpha + m9) * (alpha + beta + m9) * uniform / (alpha + 2 * m9) / (alpha + 2 * m9 + 1);
+    //         alpha0 = alpha1 + c9 * alpha0;
+    //         beta0 = beta1 + c9 * beta0;
+    //         m9 += 1;
+    //         c9 = m9 * (beta - m9) * uniform / (alpha + 2 * m9 - 1) / (alpha + 2 * m9);
+    //         alpha1 = alpha0 + c9 * alpha1;
+    //         beta1 = beta0 + c9 * beta1;
+    //         alpha0 = alpha0 / beta1;
+    //         beta0 = beta0 / beta1;
+    //         alpha1 = alpha1 / beta1;
+    //         beta1 = 1;
+    //     }
 
-        return alpha1 / alpha;
-    }
+    //     return alpha1 / alpha;
+    // }
 
     
 
