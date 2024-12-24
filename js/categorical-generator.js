@@ -4,10 +4,12 @@ import { BaseClass } from "./base-class.js";
 
 export class CategoricalGenerator extends BaseClass{
 
+    _formatter;
+
     _elementsArray = [];
     _probabilityArray = [];
 
-    _sequenceLength = 100;
+    _sequenceLength;
     _rawSequence = [];
     _sequence = [];
 
@@ -28,8 +30,9 @@ export class CategoricalGenerator extends BaseClass{
         return this._rawSequence;
     }
 
-    constructor() {
+    constructor(formatter) {
         super();
+        this._formatter = formatter;
     }
 
     GenerateRawSequence() {
@@ -40,7 +43,9 @@ export class CategoricalGenerator extends BaseClass{
         });
 
         console.log("Generate sequence");
-        this.DispatchEvent("SequenceChanged");
+        //this.DispatchEvent("SequenceChanged");
+
+        this._formatter.SequenceValues = this._rawSequence;
     }
 
     BinarySearch(array, value) {

@@ -3,18 +3,14 @@ import { BaseClass } from "./base-class.js";
 
 export class Generator extends BaseClass {
 
-    _rangeStart = 1;
-    _rangeEnd = 100;
-    _sequenceLength = 1000;
+    _rangeStart;
+    _rangeEnd;
+    _sequenceLength;
     _valueDecimalState = 1;
     _valueDecimalLength = 0;
     _distribution = 1;
     _rawSequence = [];
     _sequence = []
-
-    _mean = 0;
-    _sd = 0.25;
-    _variance = 0.25;
 
     _distUniform = {p1: 0, p2: 0, clip: 0};
     _distNormal = {mean: 0, sd: 1, clip: 3};
@@ -27,8 +23,14 @@ export class Generator extends BaseClass {
     _distStudentt = {dof: 1, p2: 0, clip: 3};
     _distWeibull = {shape: 1.5, scale: 1, clip: 3.5};
 
+    _active = false;
 
-    _HALF_TWO_PI_LOG = -0.91893853320467274180;
+    set Active(value) {
+        this._active = value;
+        if (this._active) {
+            this.GenerateRawValues();
+        }
+    }
 
     get RangeStart() {
         return this._rangeStart;
@@ -81,7 +83,8 @@ export class Generator extends BaseClass {
     }
 
     get RandomValue() {
-        return this.GenerateRandomFloatValue();
+        return this._rawSequence[0]
+        //return this.GenerateRandomFloatValue();
     }
 
     get FirstParameter() {
@@ -271,6 +274,10 @@ export class Generator extends BaseClass {
     }
 
     GenerateRawValues() {
+
+        if (this._active == false) {
+            return;
+        }
 
         if (this._distribution == 1) {
             this._rawSequence = Array.from({length: this._sequenceLength}, () => {

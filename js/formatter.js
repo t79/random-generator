@@ -87,6 +87,7 @@ export class Formatter extends BaseClass {
         this._formattedHtmlStr = this._sequenceValues.join(" ");
         this._formattedTextStr = this._formattedHtmlStr ;
         this._outputElm.style.whiteSpace = "normal";
+        console.log("formatted list changed");
         this.DispatchEvent("formattedListChanged");
     }
 

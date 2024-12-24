@@ -7,6 +7,7 @@ export class CategoricalInputManager extends BaseClass {
     
     _groupContainerElm;
     _addGroupButtonElm;
+    _addRangeButtonElm;
 
     _groups = [];
 
@@ -52,15 +53,110 @@ export class CategoricalInputManager extends BaseClass {
     GetElements() {
         this._groupContainerElm = document.getElementById("categorical-inputs");
         this._addGroupButtonElm = document.getElementById("categorical-add-group");
+        this._addRangeButtonElm = document.getElementById("categorical-add-range");
     }
 
     SetEvents() {
         this._addGroupButtonElm.addEventListener("click", () => this.AddNewGroup() );
+        this._addRangeButtonElm.addEventListener("click", () => this.AddNewRange());
+    }
+
+    AddNewRange() {
+        const groupObj = {
+            id: this._groupsId++,
+            group: null,
+            fromElm: null,
+            toElm: null,
+            stepElm: null,
+            countElm: null,
+            elementsArray: [],
+            probabilityElm: null,
+        }
+        this._groups.push(groupObj);
+
+        const group = document.createElement("div");
+        group.classList.add("categorical-group");
+
+        const rangControls = document.createElement("div");
+        rangControls.classList.add("categorical-range-controls");
+        group.appendChild(rangControls);
+
+        const fromInput = document.createElement("input");
+        fromInput.type = "number";
+        fromInput.classList.add("categorical-range-from");
+        rangControls.appendChild(fromInput);
+
+        const toInput = document.createElement("input");
+        toInput.type = "number";
+        toInput.classList.add("categorical-range-to");
+        rangControls.appendChild(toInput);
+
+        const countControls = document.createElement("div");
+        countControls.classList.add("categorical-range-count");
+        group.appendChild(countControls);
+
+        const stepInput = document.createElement("input");
+        stepInput.type = "number";
+        stepInput.classList.add("categorical-range-step");
+        countControls.appendChild(stepInput);
+
+        const countInput = document.createElement("input");
+        countInput.type = "number";
+        countInput.classList.add("categorical-range-count");
+        countControls.appendChild(countInput);
+
+        const inputProbability = document.createElement("input");
+        inputProbability.type = "text";
+        inputProbability.classList.add("categorical-probability");
+        group.appendChild(inputProbability);
+
+        this.InsertGroup(group);
+
+        groupObj.group = group;
+        groupObj.fromElm = fromInput;
+        groupObj.toElm = toInput;
+        groupObj.stepElm = stepInput;
+        groupObj.probabilityElm = inputProbability;
+
+        fromInput.addEventListener("input", () => {
+            this.RangeChanged(groupObj)
+        });
+        toInput.addEventListener("input", () => {this.RangeChanged(groupObj)});
+        stepInput.addEventListener("input", () => {this.RangeChanged(groupObj)});
+        countInput.addEventListener("input", () => {this.RangeChanged(groupObj)});
+
+        inputProbability.addEventListener("input", () => {
+            this.ConstructProbabilityTable();
+        });
+    }
+
+    RangeChanged(group) {
+
+        var from = parseFloat(group.fromElm.value);
+        if (isNaN(from)) {
+            from = 0;
+        }
+        var to = parseFloat(group.toElm.value);
+        if (isNaN(to)) {
+            to = 0;
+        }
+        var step = parseFloat(group.stepElm.value);
+        if (isNaN(step) || step === 0) {
+            step = 1;
+        }
+
+        const elements = [];
+        for (let i = from; i <= to; i += step) {
+            elements.push(i);
+        }
+
+        console.log(elements);
+        group.elementsArray = elements;
+
+        this.ConstructProbabilityTable();
     }
 
     AddNewGroup() {
-
-        console.log("Testing");
 
         const groupObj = {
             id: this._groupsId++,
@@ -100,11 +196,10 @@ export class CategoricalInputManager extends BaseClass {
     }
 
     InsertGroup(group) {
-        this._groupContainerElm.insertBefore(group, this._addGroupButtonElm);
+        this._groupContainerElm.insertBefore(group, this._addRangeButtonElm);
     }
 
     GroupChanged(group) {
-        console.log("Group changed: ", group.id)
 
         const inputStr = group.elementsElm.value;
         const inputLines = inputStr.split("\n");
@@ -146,6 +241,7 @@ export class CategoricalInputManager extends BaseClass {
             if (isNaN(groupProbability)) {
                 groupProbability = 0;
             }
+            groupProbability /= groupElements.length;
             for (let j = 0; j < groupElements.length; j++) {
                 const element = groupElements[j];
                 probability += groupProbability;
@@ -153,6 +249,8 @@ export class CategoricalInputManager extends BaseClass {
                 probabilityArray.push(probability);
             }
         }
+
+        console.log("num groups: " + this._groups.length);
 
         this._elementsArray = elementsArray;
         if (probability == 0) {

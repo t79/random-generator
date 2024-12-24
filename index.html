@@ -24,6 +24,18 @@
                 RANDOM SEQUENCE GENERATOR
             </h1>
 
+            <div id="select-type">
+                <div id="select-controler">
+                    <input type="range" class="settings-slider" id="select-slider" min="1" max="2" value="1">
+                </div>
+                <div id="select-numerical" class="select-button">
+                    Numerical
+                </div>
+                <div id="select-categorical" class="select-button">
+                    Categorical
+                </div>
+            </div>
+
         </header>
 
         <div id="histogram-container">
@@ -35,246 +47,235 @@
     </div>
     <main>
         <div id="controls">
-            <div id="top-controls">
-                <div id="select-type">
-                    <div id="select-controler">
-                        <input type="range" class="settings-slider" id="select-slider" min="1" max="2" value="1">
+
+            <div id="main-controls">
+
+                <div id="categorical-inputs">
+
+                    <div id="categorical-add-range">
+                        <span>New</span>
+                        <span>Discrete</span>
+                        <span>Range</span>
+                        <img src="assets/icons/square-plus-solid.svg">
                     </div>
-                    <div id="select-numerical" class="select-button">
-                        Numerical
+
+                    <div id="categorical-add-group">
+                        <span>New</span>
+                        <span>Group</span>
+                        <img src="assets/icons/square-plus-solid.svg">
                     </div>
-                    <div id="select-categorical" class="select-button">
-                        Categorical
+    
+                </div>
+                <div id="inputs">
+                    <div id="input-fields">
+                        <div class="input-box">
+                            <label id="count-value-label" for="count-value">Number of Values</label>
+                            <input id="count-value" name="count-value" type="number" min="1" value="1">
+                        </div>
+                        <div id="count-matrix-box" class="input-box">
+                            <label id="count-per-matrix-label" for="count-value">Values per Matrix</label>
+                            <input id="count-per-matrix" name="count-value" type="text" value="0" readonly>
+                        </div>
+                        <div id="start-value-box" class="input-box">
+                            <label id="start-value-label" for="start-value">From Value, included</label>
+                            <input id="start-value" name="start-value" type="number" value="0">
+                        </div>
+                        <div id="end-value-box" class="input-box">
+                            <label id="end-value-label" for="end-value">To Value, excluded</label>
+                            <input id="end-value" name="end-value" type="number" value="0">
+                        </div>
+                    </div>
+                    <div id="input-buttons">
+                        <img id="regenerate-icon" src="assets/icons/rotate-right-solid.svg">
                     </div>
                 </div>
-                <div id="info-and-settings">
-                    <div id="credits-container">
-                        <div id="credits-label">
-                            Credits
+
+            </div>
+
+            <div id="info-and-settings">
+                <div id="credits-container">
+                    <div id="credits-label">
+                        Credits
+                    </div>
+                    <div id="credits-panel-container" class="settings-column-hidden">
+                        <div id="credits-panel">
+                            https://github.com/royhzq/betajs <br>
+                            All right reserved.
                         </div>
-                        <div id="credits-panel-container" class="settings-column-hidden">
-                            <div id="credits-panel">
-                                https://github.com/royhzq/betajs <br>
-                                All right reserved.
+                    </div>
+                </div>
+                <div id="copy-and-save">
+        
+                    <img id="clipboard-icon" src="assets/icons/copy-solid.svg">
+                    <img id="download-icon" src="assets/icons/file-arrow-down-solid.svg">
+                    
+                </div>
+                <div id="settings-container">
+                    <div id="settings-label">
+                        <span>Settings</span>
+                        <img id="settings-icon" src="assets/icons/sliders-solid.svg">
+                    </div>
+                    <div id="settings-column-container">
+                        <div id="settings-column">
+                            <div class="setting-block">
+                                <div class="settings-option">
+                                    <span>Number of Values</span>
+                                </div>
+                                <div class="settings-option">
+                                    <span class="setting-option-label-selected">Count</span>
+                                    <input id="sequence-count-value" type="number" min="1" value="1">
+                                </div>
+                                <div class="setting-item">
+                                    <span>Range Length <span class="settings-small-text">max 10000</span></span>
+                                </div>
+                                <div class="setttings-slider-options">
+                                    <input type="range" class="settings-slider" id="count-size-slider" min="1" max="2" value="1">
+                                </div>
+                            </div>
+    
+                            <div class="setting-block">
+    
+                                <div class="settings-option">
+                                    <span>Distribution</span>
+                                </div>
+    
+                                <div class="settings-option">
+                                    <span id="settings-uniform-label" class="setting-option-label-selected">Uniform</span>
+                                </div>
+    
+                                <div class="settings-option">
+                                    <span id="settings-normal-label">Normal</span>
+                                </div>
+
+                                <div class="settings-option">
+                                    <span id="settings-beta-label">Beta</span>
+                                </div>
+
+                                <div class="settings-option">
+                                    <span id="settings-cauchy-label">Cauchy</span>
+                                </div>
+
+                                <div class="settings-option">
+                                    <span id="settings-chi-squared-label">Chi Squared</span>
+                                </div>
+
+                                <div class="settings-option">
+                                    <span id="settings-gamma-label">Gamma</span>
+                                </div>
+
+                                <div class="settings-option">
+                                    <span id="settings-gamma-inv-label">Gamma <span class="settings-small-text">invert</span></span>
+                                </div>
+
+                                <div class="settings-option">
+                                    <span id="settings-log-normal-label">Log Normal</span>
+                                </div>
+
+                                <div class="settings-option">
+                                    <span id="settings-pareto-label">Student T</span>
+                                </div>
+
+                                <div class="settings-option">
+                                    <span id="settings-weibull-label">Weibull</span>
+                                </div>
+
+                                <div class="settings-option">
+                                    <div class="settings-parameter">
+                                        <span id="settings-distribution-parameter-1-header">Normal Mean</span>
+                                        <input class="settings-slider-small" id="settings-distribution-parameter-1-slider" type="range" min="0" max="4" step="0.1" value="0">
+                                    </div>
+                                    <input id="settings-distribution-parameter-1" class="settings-distribution-field" type="number" value="0" step="0.1">
+                                </div>
+                                <div class="settings-option">
+                                    <div class="settings-parameter">
+                                        <span id="settings-distribution-parameter-2-header">Normal Variance</span>
+                                        <input class="settings-slider-small" id="settings-distribution-parameter-2-slider" type="range" min="0" max="4" step="0.1" value="0">
+                                    </div>
+                                    <input id="settings-distribution-parameter-2" class="settings-distribution-field" type="number" value="0" step="0.1">
+                                </div>
+                                <div class="settings-option">
+                                    <div class="settings-parameter">
+                                        <span id="settings-distribution-parameter-3-header">Clip range</span>
+                                        <input class="settings-slider-small" id="settings-distribution-parameter-3-slider" type="range" min="0.1" max="5" step="0.05" value="3">
+                                    </div>
+                                    <input id="settings-distribution-parameter-3" class="settings-distribution-field" type="text" value="[ -3, 3 ]">
+                                </div>
+    
+                                <div class="setttings-slider-options">
+                                    <input type="range" class="settings-slider" id="distribution-slider" min="1" max="10" value="1">
+                                </div>
+    
+                            </div>
+        
+                            <div class="setting-block">
+        
+                                <div class="settings-option">
+                                    <span id="settings-max-decimal-label" class="setting-option-label-selected">Max Decimals</span>
+                                </div>
+        
+                                <div class="settings-option">
+                                    <span id="settings-fix-decimal-label">Fix Decimals</span>
+                                </div>
+        
+                                <div class="settings-option">
+                                    <span id="settings-precision-label">Precision</span>
+                                </div>
+        
+                                <div class="settings-option">
+                                    <input id="length-digits" type="text" readonly value="0">
+                                    <input class="settings-slider-small" id="length-digits-slider" type="range" min="0" max="15" value="0">
+                                </div>
+        
+                                <div class="setttings-slider-options">
+                                    <input type="range" class="settings-slider" id="decimals-slider" min="1" max="3" value="1">
+                                </div>
+        
+        
+                            </div>
+    
+                            <div class="setting-block">
+    
+                                <div class="settings-option">
+                                    <span>Format</span>
+                                </div>
+    
+                                <div class="settings-option">
+                                    <span id="settings-single-values-label" class="setting-option-label-selected">1 2 3 4</span>
+                                </div>
+    
+                                <div class="settings-option">
+                                    <span id="settings-list-label">[1, 2, 3, 4]</span>
+                                </div>
+    
+                                <div class="settings-option">
+                                    <span id="settings-matrix-label">nD Matrix</span>
+                                    <input type="text" id="settings-matrix-input" value="2">
+                                </div>
+    
+                                <div class="setttings-slider-options">
+                                    <input type="range" class="settings-slider" id="format-slider" min="1" max="3" value="1">
+                                </div>
+    
+                            </div>
+    
+                            <div class="setting-block">
+    
+                                <div class="settings-option">
+                                    <span>Linebreak</span>
+                                </div>
+    
+                                <div class="settings-option">
+                                    <span id="settings-linebreak-label">On (Wrap)</span>
+                                </div>
+    
+                                <div class="settings-slider-option">
+                                    <input type="range" class="settings-slider" id="linebreak-slider" min="0" max="0" value="0" step="1">
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div id="settings-container">
-                        <div id="settings-label">
-                            <span>Settings</span>
-                            <img id="settings-icon" src="assets/icons/sliders-solid.svg">
-                        </div>
-                        <div id="settings-column-container">
-                            <div id="settings-column">
-            
-                                <div id="copy-and-save">
-            
-                                    <img id="clipboard-icon" src="assets/icons/copy-solid.svg">
-                                    <img id="download-icon" src="assets/icons/file-arrow-down-solid.svg">
-                                    
-                                </div>
-        
-                                <div class="setting-block">
-                                    <div class="settings-option">
-                                        <span>Number of Values</span>
-                                    </div>
-                                    <div class="settings-option">
-                                        <span class="setting-option-label-selected">Count</span>
-                                        <input id="sequence-count-value" type="number" value="1000">
-                                    </div>
-                                    <div class="setting-item">
-                                        <span>Range Length <span class="settings-small-text">max 10000</span></span>
-                                    </div>
-                                    <div class="setttings-slider-options">
-                                        <input type="range" class="settings-slider" id="count-size-slider" min="1" max="2" value="1">
-                                    </div>
-                                </div>
-        
-                                <div class="setting-block">
-        
-                                    <div class="settings-option">
-                                        <span>Distribution</span>
-                                    </div>
-        
-                                    <div class="settings-option">
-                                        <span id="settings-uniform-label" class="setting-option-label-selected">Uniform</span>
-                                    </div>
-        
-                                    <div class="settings-option">
-                                        <span id="settings-normal-label">Normal</span>
-                                    </div>
-    
-                                    <div class="settings-option">
-                                        <span id="settings-beta-label">Beta</span>
-                                    </div>
-    
-                                    <div class="settings-option">
-                                        <span id="settings-cauchy-label">Cauchy</span>
-                                    </div>
-    
-                                    <div class="settings-option">
-                                        <span id="settings-chi-squared-label">Chi Squared</span>
-                                    </div>
-    
-                                    <div class="settings-option">
-                                        <span id="settings-gamma-label">Gamma</span>
-                                    </div>
-    
-                                    <div class="settings-option">
-                                        <span id="settings-gamma-inv-label">Gamma <span class="settings-small-text">invert</span></span>
-                                    </div>
-    
-                                    <div class="settings-option">
-                                        <span id="settings-log-normal-label">Log Normal</span>
-                                    </div>
-    
-                                    <div class="settings-option">
-                                        <span id="settings-pareto-label">Student T</span>
-                                    </div>
-    
-                                    <div class="settings-option">
-                                        <span id="settings-weibull-label">Weibull</span>
-                                    </div>
-    
-                                    <div class="settings-option">
-                                        <div class="settings-parameter">
-                                            <span id="settings-distribution-parameter-1-header">Normal Mean</span>
-                                            <input class="settings-slider-small" id="settings-distribution-parameter-1-slider" type="range" min="0" max="4" step="0.1" value="0">
-                                        </div>
-                                        <input id="settings-distribution-parameter-1" class="settings-distribution-field" type="number" value="0" step="0.1">
-                                    </div>
-                                    <div class="settings-option">
-                                        <div class="settings-parameter">
-                                            <span id="settings-distribution-parameter-2-header">Normal Variance</span>
-                                            <input class="settings-slider-small" id="settings-distribution-parameter-2-slider" type="range" min="0" max="4" step="0.1" value="0">
-                                        </div>
-                                        <input id="settings-distribution-parameter-2" class="settings-distribution-field" type="number" value="0" step="0.1">
-                                    </div>
-                                    <div class="settings-option">
-                                        <div class="settings-parameter">
-                                            <span id="settings-distribution-parameter-3-header">Clip range</span>
-                                            <input class="settings-slider-small" id="settings-distribution-parameter-3-slider" type="range" min="0.1" max="5" step="0.05" value="3">
-                                        </div>
-                                        <input id="settings-distribution-parameter-3" class="settings-distribution-field" type="text" value="[ -3, 3 ]">
-                                    </div>
-        
-                                    <div class="setttings-slider-options">
-                                        <input type="range" class="settings-slider" id="distribution-slider" min="1" max="10" value="1">
-                                    </div>
-        
-                                </div>
-            
-                                <div class="setting-block">
-            
-                                    <div class="settings-option">
-                                        <span id="settings-max-decimal-label" class="setting-option-label-selected">Max Decimals</span>
-                                    </div>
-            
-                                    <div class="settings-option">
-                                        <span id="settings-fix-decimal-label">Fix Decimals</span>
-                                    </div>
-            
-                                    <div class="settings-option">
-                                        <span id="settings-precision-label">Precision</span>
-                                    </div>
-            
-                                    <div class="settings-option">
-                                        <input id="length-digits" type="text" readonly value="0">
-                                        <input class="settings-slider-small" id="length-digits-slider" type="range" min="0" max="15" value="0">
-                                    </div>
-            
-                                    <div class="setttings-slider-options">
-                                        <input type="range" class="settings-slider" id="decimals-slider" min="1" max="3" value="1">
-                                    </div>
-            
-            
-                                </div>
-        
-                                <div class="setting-block">
-        
-                                    <div class="settings-option">
-                                        <span>Format</span>
-                                    </div>
-        
-                                    <div class="settings-option">
-                                        <span id="settings-single-values-label" class="setting-option-label-selected">1 2 3 4</span>
-                                    </div>
-        
-                                    <div class="settings-option">
-                                        <span id="settings-list-label">[1, 2, 3, 4]</span>
-                                    </div>
-        
-                                    <div class="settings-option">
-                                        <span id="settings-matrix-label">nD Matrix</span>
-                                        <input type="text" id="settings-matrix-input" value="2">
-                                    </div>
-        
-                                    <div class="setttings-slider-options">
-                                        <input type="range" class="settings-slider" id="format-slider" min="1" max="3" value="1">
-                                    </div>
-        
-                                </div>
-        
-                                <div class="setting-block">
-        
-                                    <div class="settings-option">
-                                        <span>Linebreak</span>
-                                    </div>
-        
-                                    <div class="settings-option">
-                                        <span id="settings-linebreak-label">On (Wrap)</span>
-                                    </div>
-        
-                                    <div class="settings-slider-option">
-                                        <input type="range" class="settings-slider" id="linebreak-slider" min="0" max="0" value="0" step="1">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-            </div>
-            <div id="categorical-inputs">
-
-                <div id="categorical-add-group">
-                    <span>New</span>
-                    <span>Group</span>
-                    <img src="assets/icons/square-plus-solid.svg">
-                </div>
-
-
-
-
-
-
-            </div>
-            <div id="inputs">
-                <div id="input-fields">
-                    <div class="input-box">
-                        <label id="count-value-label" for="count-value">Number of Values</label>
-                        <input id="count-value" name="count-value" type="number" value="1000">
-                    </div>
-                    <div id="count-matrix-box" class="input-box">
-                        <label id="count-per-matrix-label" for="count-value">Values per Matrix</label>
-                        <input id="count-per-matrix" name="count-value" type="text" value="0" readonly>
-                    </div>
-                    <div id="start-value-box" class="input-box">
-                        <label id="start-value-label" for="start-value">From Value, included</label>
-                        <input id="start-value" name="start-value" type="number" value="1">
-                    </div>
-                    <div class="input-box">
-                        <label id="end-value-label" for="end-value">To Value, excluded</label>
-                        <input id="end-value" name="end-value" type="number" value="100">
-                    </div>
-                </div>
-                <div id="input-buttons">
-                    <img id="regenerate-icon" src="assets/icons/rotate-right-solid.svg">
-                </div>
-            </div>
-
-            
-
-            
+            </div> 
         </div>
         <div id="output">
                

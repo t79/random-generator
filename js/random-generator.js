@@ -1,13 +1,13 @@
 import { RandomHeader } from "./random-header.js";
 import { Generator } from "./generator.js";
 import { WebpageManager } from "./webpage-manager.js";
-import { NumberSequence } from "./number-sequence.js";
+import { SequenceManager } from "./sequence-manager.js";
 
 
 export class RandomGenerator {
 
     _header;
-    _numberSequence;
+    _sequenceManager;
     _settingsElm;
     _settingsColumnElm;
     _creditsElm;
@@ -20,8 +20,8 @@ export class RandomGenerator {
     }
 
     Setup() {
-        //this._header = new RandomHeader();
-        this._numberSequence = new NumberSequence();
+        this._header = new RandomHeader();
+        this._sequenceManager = new SequenceManager();
     }
 
     GetElements() {

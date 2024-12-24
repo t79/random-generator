@@ -8,6 +8,13 @@ export class CategoricalGeneratorSettings {
 
     _numberOfValueCountInputElm;
     _numberOfValues = 0;
+    _reGenerateButtonElm;
+
+    _active = false;
+
+    set Active(value) {
+        this._active = value;
+    }
 
     constructor(generator, inputManager) {
         this._generator = generator;
@@ -21,7 +28,8 @@ export class CategoricalGeneratorSettings {
     }
 
     GetElements() {
-        this._numberOfValueCountInputElm = document.getElementById("sequence-count-value");
+        this._numberOfValueCountInputElm = document.getElementById("count-value");
+        this._reGenerateButtonElm = document.getElementById("regenerate-icon");
     }
 
     SetEventListeners() {
@@ -32,6 +40,7 @@ export class CategoricalGeneratorSettings {
             this._generator.GenerateRawSequence();
         })
         this._numberOfValueCountInputElm.addEventListener("input", () => this.SetNumberOfValuesFromSettings());
+        this._reGenerateButtonElm.addEventListener("click", () => this.ReGenerateClicked() );
     }
 
     SetNumberOfValuesFromSettings() {
@@ -40,6 +49,12 @@ export class CategoricalGeneratorSettings {
             this._numberOfValues = numberOfValues;
             this._inputManager.ElementsCount = numberOfValues;
             this._generator.SequenceLength = this._numberOfValues;
+        }
+    }
+
+    ReGenerateClicked() {
+        if (this._active) {
+            this._generator.GenerateRawSequence();
         }
     }
 }

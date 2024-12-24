@@ -23,6 +23,7 @@ export class RandomHeader {
     Setup() {
         this._headerElm = document.querySelector("header");
         this._generator = new Generator();
+        this._generator.Active = true;
         this.MakeHeaderElements();
     }
 

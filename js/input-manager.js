@@ -16,7 +16,7 @@ export class InputManager extends BaseClass {
 
     _matrixMode = false;
     _matrixSize = 1;
-    _valueCount = 1000;
+    _valueCount;
     _valueStart;
     _valueEnd;
 

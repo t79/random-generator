@@ -16,6 +16,7 @@ export class WebpageManager {
     }
 
     PresentValues(values) {
+        console.log("presenting values");
         this._outputElm.innerHTML = this._formatter.FormattedHtmlStr;
     }
 }
