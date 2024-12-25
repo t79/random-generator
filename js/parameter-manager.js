@@ -26,8 +26,8 @@ export class ParameterManager {
 
     GetElements() {
         this._sequenceLengthElm = document.getElementById("count-value");
-        this._numericalStartValueElm = document.getElementById("start-value");
-        this._numericalEndValueElm = document.getElementById("end-value");
+        this._numericalStartValueElm = document.getElementById("range-from-input");
+        this._numericalEndValueElm = document.getElementById("range-to-input");
     }
 
     SetEventListeners() {

@@ -24,18 +24,6 @@
                 RANDOM SEQUENCE GENERATOR
             </h1>
 
-            <div id="select-type">
-                <div id="select-controler">
-                    <input type="range" class="settings-slider" id="select-slider" min="1" max="2" value="1">
-                </div>
-                <div id="select-numerical" class="select-button">
-                    Numerical
-                </div>
-                <div id="select-categorical" class="select-button">
-                    Categorical
-                </div>
-            </div>
-
         </header>
 
         <div id="histogram-container">
@@ -50,65 +38,63 @@
 
             <div id="main-controls">
 
-                <div id="categorical-inputs">
 
-                    <div id="categorical-add-range">
-                        <span>New</span>
-                        <span>Discrete</span>
-                        <span>Range</span>
-                        <img src="assets/icons/square-plus-solid.svg">
+
+                <div id="numerical-block" class="input-block">
+
+
+                    <div class="block-header">
+                        Continuous Range
                     </div>
 
-                    <div id="categorical-add-group">
-                        <span>New</span>
-                        <span>Group</span>
-                        <img src="assets/icons/square-plus-solid.svg">
+                    <div id="range-from-field" class="input-field">
+                        <label id="range-from-label" for="range-from-input">From Value, included</label>
+                        <input id="range-from-input" name="range-from-input" type="number" value="0">
                     </div>
+                    <div id="range-to-field" class="input-field">
+                        <label id="range-to-label" for="range-to-input">To Value, excluded</label>
+                        <input id="range-to-input" name="range-to-input" type="number" value="0">
+                    </div>
+
+                    <div id="cont-numerical-weight-field" class="weight-input-field">
+                        <label id="cont-numerical-weight-label" for="cont-numerical-weight-input">Probability <br>Weight</label>
+                        <input id="cont-numerical-weight-input" name="cont-numerical-weight-input" type="number" value="1">
+                    </div>
+
+                </div>
+
+                <div id="add-discrete-range" class="add-block">
+                    <span>New</span>
+                    <span>Discrete</span>
+                    <span>Range</span>
+                    <img src="assets/icons/square-plus-solid.svg">
+                </div>
+
+                <div id="add-categorical-group" class="add-block">
+                    <span>New</span>
+                    <span>Group</span>
+                    <img src="assets/icons/square-plus-solid.svg">
+                </div>
     
-                </div>
-                <div id="inputs">
-                    <div id="input-fields">
-                        <div class="input-box">
-                            <label id="count-value-label" for="count-value">Number of Values</label>
-                            <input id="count-value" name="count-value" type="number" min="1" value="1">
-                        </div>
-                        <div id="count-matrix-box" class="input-box">
-                            <label id="count-per-matrix-label" for="count-value">Values per Matrix</label>
-                            <input id="count-per-matrix" name="count-value" type="text" value="0" readonly>
-                        </div>
-                        <div id="start-value-box" class="input-box">
-                            <label id="start-value-label" for="start-value">From Value, included</label>
-                            <input id="start-value" name="start-value" type="number" value="0">
-                        </div>
-                        <div id="end-value-box" class="input-box">
-                            <label id="end-value-label" for="end-value">To Value, excluded</label>
-                            <input id="end-value" name="end-value" type="number" value="0">
-                        </div>
-                    </div>
-                    <div id="input-buttons">
-                        <img id="regenerate-icon" src="assets/icons/rotate-right-solid.svg">
-                    </div>
-                </div>
+                
 
             </div>
 
             <div id="info-and-settings">
-                <div id="credits-container">
-                    <div id="credits-label">
-                        Credits
-                    </div>
-                    <div id="credits-panel-container" class="settings-column-hidden">
-                        <div id="credits-panel">
-                            https://github.com/royhzq/betajs <br>
-                            All right reserved.
-                        </div>
-                    </div>
-                </div>
                 <div id="copy-and-save">
         
+                    <img id="regenerate-icon" src="assets/icons/rotate-right-solid.svg">
                     <img id="clipboard-icon" src="assets/icons/copy-solid.svg">
                     <img id="download-icon" src="assets/icons/file-arrow-down-solid.svg">
                     
+                </div>
+                <div class="input-box">
+                    <label id="count-value-label" for="count-value">Number of Values</label>
+                    <input id="count-value" name="count-value" type="number" min="1" value="1">
+                </div>
+                <div id="count-matrix-box" class="input-box">
+                    <label id="count-per-matrix-label" for="count-value">Values per Matrix</label>
+                    <input id="count-per-matrix" name="count-value" type="text" value="1" readonly>
                 </div>
                 <div id="settings-container">
                     <div id="settings-label">
@@ -117,21 +103,6 @@
                     </div>
                     <div id="settings-column-container">
                         <div id="settings-column">
-                            <div class="setting-block">
-                                <div class="settings-option">
-                                    <span>Number of Values</span>
-                                </div>
-                                <div class="settings-option">
-                                    <span class="setting-option-label-selected">Count</span>
-                                    <input id="sequence-count-value" type="number" min="1" value="1">
-                                </div>
-                                <div class="setting-item">
-                                    <span>Range Length <span class="settings-small-text">max 10000</span></span>
-                                </div>
-                                <div class="setttings-slider-options">
-                                    <input type="range" class="settings-slider" id="count-size-slider" min="1" max="2" value="1">
-                                </div>
-                            </div>
     
                             <div class="setting-block">
     

@@ -49,7 +49,7 @@ header {
     height: 10rem;
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: 0.33fr repeat(2, 1fr) 2fr 2fr;
+    grid-template-rows: 0.33fr repeat(2, 1fr) 2fr;
     background-color: #0b0c0ecc;
     color: white;
 }
@@ -99,6 +99,20 @@ h1 {
     -webkit-backdrop-filter: blur(5px);
 }
 
+input {
+    font-family: var(--default-font);
+    color: var(--white-color);
+    background-color: var(--input-color);
+    border: 0px solid #0000;
+}
+
+input:focus {
+    border: 0px solid #0000;
+    background-color: var(--input-focus-color);
+    box-shadow: none;
+    outline: none;
+}
+
 main {
     width: 100%;
     min-height: 100%;
@@ -125,9 +139,122 @@ main {
     grid-row-start: 1;
     grid-row-end: 2;
     display: flex;
-    flex-flow: column nowrap;
-    justify-content: flex-end;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: 1.5rem;
 }
+
+.input-block {
+    height: 14rem;
+    display: grid;
+    grid-template-columns: auto;
+    gap: 0.5rem;
+}
+
+#numerical-block {
+    grid-template-rows: auto 1fr 1fr auto;
+}
+
+.block-header {
+    grid-column: 1;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    display: flex;
+    flex-flow: column nowrap;
+    background-color: var(--input-color);
+    font-size: 0.9rem;
+    padding: 0.3rem;
+    text-align: center;
+}
+
+#range-from-field {
+    grid-column: 1;
+    grid-row-start: 2;
+    grid-row-end: 3;
+}
+
+#range-to-field {
+    grid-column: 1;
+    grid-row-start: 3;
+    grid-row-end: 4;
+}
+
+#cont-numerical-weight-field {
+    grid-column: 1;
+    grid-row-start: 4;
+    grid-row-end: 5;
+}
+
+.input-field {
+    display: flex;
+    flex-flow: column nowrap;
+    background-color: var(--input-color);
+}
+
+.input-field input {
+    width: 14ch;
+    padding: 0.5rem 0.5rem 0.8rem 0.8rem;
+    font-size: 1.3rem;
+    text-align: center;
+}
+
+.input-field label {
+    padding: 0.2rem;
+    font-size: 0.8rem;
+}
+
+.input-textarea-field {
+    align-self: stretch;
+    width: 28ch;
+    height: 100%;
+    color: var(--white-color);
+    font-size: 1rem;
+    font-family: var(--default-font);
+    letter-spacing: 0.1rem;
+    background-color: var(--background-color);
+    padding: 0.5rem;
+    resize: horizontal;
+}
+
+.weight-input-field {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    background-color: var(--input-color);
+}
+
+.weight-input-field input {
+    width: 8ch;
+    font-size: 1.1rem;
+    text-align: center;
+    padding: 0.3rem;
+}
+
+.weight-input-field label {
+    padding: 0.2rem;
+    font-size: 0.7rem;
+}
+
+.add-block {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.75rem;
+}
+
+.add-block img {
+    width: 1.5rem;
+    height: auto;
+    margin: 0.3rem;
+}
+
+
+
+
+
+
+
 
 #inputs {
     width: 100%;
@@ -169,9 +296,7 @@ main {
     display: none;
 }
 
-#inputs label {
-    font-size: 0.8rem;
-}
+
 
 #inputs input {
     width: 14ch;
@@ -497,47 +622,6 @@ main {
     margin-bottom: 2rem;
 }
 
-#categorical-add-group,
-#categorical-add-range {
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
-    align-items: center;
-    font-size: 0.75rem;
-}
-
-#categorical-add-group img,
-#categorical-add-range img {
-    width: 1.5rem;
-    height: auto;
-    margin: 0.3rem;
-}
-
-.categorical-group {
-    display: flex;
-    flex-flow: column nowrap;
-}
-
-.categorical-elements {
-    width: 15rem;
-    height: 5rem;
-    color: var(--white-color);
-    font-size: 1rem;
-    font-family: var(--default-font);
-    letter-spacing: 0.1rem;
-    background-color: var(--background-color);
-    padding: 0.5rem;
-    resize: none;
-}
-
-.categorical-probability {
-    color: var(--white-color);
-    font-size: 1rem;
-    font-family: var(--default-font);
-    letter-spacing: 0.1rem;
-    background-color: var(--background-color);
-    padding: 0.5rem;
-}
 
 #output {
     font-family: 'Courier New', Courier, monospace;

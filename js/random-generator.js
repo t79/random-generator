@@ -27,8 +27,6 @@ export class RandomGenerator {
     GetElements() {
         this._settingsElm = document.getElementById("settings-label");
         this._settingsColumnElm = document.getElementById("settings-column-container");
-        this._creditsElm = document.getElementById("credits-label");
-        this._creditsPanelElm = document.getElementById("credits-panel-container");
     }
 
     SetEventListeners() {
@@ -36,19 +34,9 @@ export class RandomGenerator {
             console.log("Settings clicked");
             this.ToggleSettings();
         });
-        this._creditsElm.addEventListener("click", () => {
-            console.log("Credits clicked");
-            this.ToggleCredits();
-        })
-
     }
     
     ToggleSettings() {
         this._settingsColumnElm.classList.toggle("settings-column-hidden");
-    }
-
-    ToggleCredits() {
-        this._creditsPanelElm.classList.toggle("settings-column-hidden");
-        this._settingsColumnElm.classList.add("settings-column-hidden");
-    }   
+    } 
 }

@@ -3,17 +3,13 @@ import { WebpageManager } from "./webpage-manager.js";
 import { ClipboardManager } from "./clipboard-manager.js";
 import { FileManager } from "./file-manager.js";
 import { FormatterSettings } from "./formatter-settings.js";
-import { NumericalManager } from "./numerical-manager.js";
-import { CategoricalManager } from "./categorical-manager.js";
-import { TypeSwitcher } from "./type-switcher.js";
 import { ParameterManager } from "./parameter-manager.js";
+import { GeneratorManager } from "./generator-manager.js";
 
 export class SequenceManager {
 
     _parameterManager;
-    _typeSwitcher;
-    _numericalManager;
-    _categoricalManager;
+    _generatorManager;
     _formatter;
     _formatterSettings;
     _webpageManager;
@@ -28,9 +24,7 @@ export class SequenceManager {
     Setup() {
         this._parameterManager = new ParameterManager();
         this._formatter = new Formatter();
-        this._numericalManager = new NumericalManager(this._formatter);
-        this._categoricalManager = new CategoricalManager(this._formatter);
-        this._typeSwitcher = new TypeSwitcher(this._numericalManager, this._categoricalManager)
+        this._generatorManager = new GeneratorManager(this._formatter);
         this._formatterSettings = new FormatterSettings(this._formatter);
         this._webpageManager = new WebpageManager(this._formatter);
         this._clipboardManager = new ClipboardManager(this._formatter);
