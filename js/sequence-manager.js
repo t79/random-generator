@@ -22,12 +22,12 @@ export class SequenceManager {
     }
 
     Setup() {
-        this._parameterManager = new ParameterManager();
         this._formatter = new Formatter();
         this._generatorManager = new GeneratorManager(this._formatter);
         this._formatterSettings = new FormatterSettings(this._formatter);
         this._webpageManager = new WebpageManager(this._formatter);
         this._clipboardManager = new ClipboardManager(this._formatter);
         this._fileManager = new FileManager(this._formatter);
+        this._parameterManager = new ParameterManager(this._generatorManager.InputManager);
     }
 }

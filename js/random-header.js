@@ -1,3 +1,4 @@
+import { ContinuousRangeBlock } from "./continuous-range-block.js";
 import { Generator } from "./generator.js";
 
 
@@ -23,6 +24,8 @@ export class RandomHeader {
     Setup() {
         this._headerElm = document.querySelector("header");
         this._generator = new Generator();
+        this._generator.Elements = [new ContinuousRangBlock()];
+        this._generator.Probabilities = [1]
         this._generator.Active = true;
         this.MakeHeaderElements();
     }

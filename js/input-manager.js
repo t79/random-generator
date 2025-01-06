@@ -1,4 +1,7 @@
 import { BaseClass } from "./base-class.js";
+import { CategoricalBlock } from "./categorical-block.js";
+import { DiscreteRangeBlock } from "./discrete-range-block.js";
+import { ContinuousRangeBlock } from "./continuous-range-block.js";
 
 
 
@@ -7,25 +10,31 @@ export class InputManager extends BaseClass {
     _generator;
 
     _regenerateButtonElm;
-    _countValueInputElm;
-    _countLabelElm;
+    _sequenceLengthInputElm;
+    _sequenceLengthElm;
     _countPerMatrixBox;
     _countPerMatrixElm;
-    _rangeFromInputElm;
-    _rangeToInputElm;
-    _rangeProbabilityElm;
-    _controlsElm;
-    _addGroupButtonElm;
-    _addRangeButtonElm;
+
+    _addDiscreteBlockButtonElm;
+    _addDiscreteRangeButtonElm;
+    _addContinuRangeButtonElm;
+    _decimalStateSliderElm;
+    _decimalStateMaxLabelElm;
+    _decimalState = 1;
+    _decimalLengthSliderElm;
+    _decimalLengthValueElm;
+    _decimalLength = 0;
+    _decimalStateMaxLabelElm;
+    _decimalStateFixLabelElm;
+    _decimalStatePrecisionLabelElm;
+
 
     _matrixMode = false;
     _matrixSize = 1;
-    _valueCount;
-    _rangeFrom;
-    _rangeTo;
+    _sequenceLength;
 
-    _groups = [];
-    _elementsArray = [];
+    _blocks = [];
+    _blockArray = [];
     _probabilitiesArray = [];
 
     set MatrixMode(value) {
@@ -37,20 +46,13 @@ export class InputManager extends BaseClass {
         this.SetMatrixSize();
     }
 
-    get ValueStart() {
-        return this._rangeFrom;
+    get SequenceLength() {
+        return this._sequenceLength;
     }
 
-    get ValueEnd() {
-        return this._rangeTo;
-    }
-
-    get ValueCount() {
-        return this._valueCount;
-    }
-
-    set ValueCount(value) {
-        this._valueCount = this._matrixSize > 0 ? Math.ceil(value / this._matrixSize) : value;
+    set SequenceLength(value) {
+        this._sequenceLength = value;
+        this._generator.SequenceLength = this._sequenceLength;
     }
 
     constructor(generator) {
@@ -66,41 +68,51 @@ export class InputManager extends BaseClass {
     }
 
     GetElements() {
-        //this._regenerateButtonElm = document.getElementById("regenerate-icon");
-        this._countValueInputElm = document.getElementById("count-value");
-        this._countLabelElm = document.getElementById("count-value-label");
+        this._regenerateButtonElm = document.getElementById("regenerate-icon");
+        this._sequenceLengthInputElm = document.getElementById("count-value");
+        this._sequenceLengthElm = document.getElementById("count-value-label");
         this._countPerMatrixBox = document.getElementById("count-matrix-box");
         this._countPerMatrixElm = document.getElementById("count-per-matrix");
-        this._rangeFromInputElm = document.getElementById("range-from-input");
-        this._rangeToInputElm = document.getElementById("range-to-input");
-        this._rangeProbabilityElm = document.getElementById("cont-numerical-weight-input");
         this._controlsElm = document.getElementById("main-controls");
-        this._addGroupButtonElm = document.getElementById("add-categorical-group");
-        this._addRangeButtonElm = document.getElementById("add-discrete-range");
+        this._addDiscreteBlockButtonElm = document.getElementById("add-discrete-group");
+        this._addDiscreteRangeButtonElm = document.getElementById("add-discrete-range");
+        this._addContinuRangeButtonElm = document.getElementById("add-continuous-range");
+        this._decimalStateSliderElm = document.getElementById("decimals-slider");
+        this._decimalStateMaxLabelElm = document.getElementById("settings-max-decimal-label");
+        this._decimalLengthSliderElm = document.getElementById("length-digits-slider");
+        this._decimalLengthValueElm = document.getElementById("length-digits");
+        this._decimalStateMaxLabelElm = document.getElementById("settings-max-decimal-label");
+        this._decimalStateFixLabelElm = document.getElementById("settings-fix-decimal-label");
+        this._decimalStatePrecisionLabelElm = document.getElementById("settings-precision-label");
     }
 
     SetEventListeners() {
-        this._countValueInputElm.addEventListener("input", () => this.SetNumberOfValues());
-        this._rangeFromInputElm.addEventListener("input", () => this.SetRangeFrom());
-        this._rangeToInputElm.addEventListener("input", () => this.SetRangeTo());
-        this._addGroupButtonElm.addEventListener("click", () => this.AddNewGroup());
-        this._addRangeButtonElm.addEventListener("click", () => this.AddNewDiscreteRange());
+        this._regenerateButtonElm.addEventListener("click", () => this.ReGenerateSequence());
+        this._sequenceLengthInputElm.addEventListener("input", () => this.SetSequenceLength());
+        this._addDiscreteBlockButtonElm.addEventListener("click", () => this.MakeDiscreteGroup());
+        this._addDiscreteRangeButtonElm.addEventListener("click", () => this.AddNewDiscreteRange());
+        this._addContinuRangeButtonElm.addEventListener("click", () => this.AddNewContinuousRange());
+        this._decimalStateSliderElm.addEventListener("input", () => this.SetDecimalState());
+        this._decimalLengthSliderElm.addEventListener("input", () => this.SetDecimalLength());
     }
 
-    SetNumberOfValues() {
+    ReGenerateSequence() {
+        this._generator.GenerateSequence();
+    }
 
-        console.log("setting length");
-        const value = parseInt(this._countValueInputElm.value);
-        if (value != this._valueCount) {
-            if (this._matrixMode) {
-                this._valueCount = value * this._matrixSize;
+    SetSequenceLength() {
+        const value = parseInt(this._sequenceLengthInputElm.value);
+
+        if (this._matrixMode) {
+            if (value * this.MatrixSize != this._sequenceLength) {
+                this.SequenceLength = value * this._matrixSize;
             }
-            else {
-                this._valueCount = value;
-            }
-            this._generator.SequenceLength = this._valueCount;
         }
-        
+        else {
+            if (value != this._sequenceLength) {
+                this.SequenceLength = value;
+            }
+        }
     }
 
     ChangeMatrixMode(mode) {
@@ -113,49 +125,37 @@ export class InputManager extends BaseClass {
     ChangeMatrix() {
         if (this._matrixMode) {
             this._countPerMatrixBox.style.display = "flex";
-            this._countLabelElm.innerHTML = "Number of Matrices";
-            this._countValueInputElm.value = this._matrixSize > 0 ? Math.ceil(this._valueCount / this._matrixSize) : this._valueCount;
+            this._sequenceLengthElm.innerHTML = "Number of Matrices";
+            this._sequenceLengthInputElm.value = this._matrixSize > 0 ? Math.ceil(this._sequenceLength / this._matrixSize) : this._sequenceLength;
         }
         else {
             this._countPerMatrixBox.style.display = "none";
-            this._countLabelElm.innerHTML = "Number of Values";
-            this._countValueInputElm.value = this._valueCount;
+            this._sequenceLengthElm.innerHTML = "Number of Values";
+            this._sequenceLengthInputElm.value = this._sequenceLength;
         }
     }
 
     SetMatrixSize() {
         this._countPerMatrixElm.value = this._matrixSize;
         if (this._matrixMode) {
-            this._countValueInputElm.value = this._matrixSize > 0 ? Math.ceil(this._valueCount / this._matrixSize) : this._valueCount;
+            this._sequenceLengthInputElm.value = this._matrixSize > 0 ? Math.ceil(this._sequenceLength / this._matrixSize) : this._sequenceLength;
         }
     }
 
-    SetRangeFrom() {
-
-        console.log("Setting from");
-        const value = parseFloat(this._rangeFromInputElm.value);
-        if (value !== this._rangeFrom) {
-            this._rangeFrom = value;
-            this._generator.RangeFrom = value;
-        }
-    }
-
-    SetRangeTo() {
-
-        console.log("Setting to");
-        const value = parseFloat(this._rangeToInputElm.value);
-        if (value !== this._rangeTo) {
-            this._rangeTo = value;
-            this._generator.RangeTo = value;
-        } 
-    }
-
-    SetInputValues() {
-        this._rangeFromInputElm.value = 1;
-        this._rangeToInputElm.value = 1000;
+    MakeDiscreteGroup() {
+        const block = this.AddNewGroup();
+        this.DispatchEvent("NewDiscreteGroup", block);
     }
 
     AddNewGroup() {
+
+        console.log("Adding new group");
+
+        const block = new CategoricalBlock(this._generator);
+        block.AddEventListener("ElementsChanged", () => this.GroupChanged(block));
+        this.AddBlock(block);
+        return block;
+
         const groupObj = {};
 
         const groupElm = document.createElement("div");
@@ -187,7 +187,7 @@ export class InputManager extends BaseClass {
         inputProbability.classList.add("categorical-probability");
         probabilityElm.appendChild(inputProbability);
 
-        this._controlsElm.insertBefore(groupElm, this._addRangeButtonElm);
+        this._controlsElm.insertBefore(groupElm, this._addDiscreteRangeButtonElm);
 
         groupObj.group = groupElm;
         groupObj.elementsElm = inputElements;
@@ -201,11 +201,11 @@ export class InputManager extends BaseClass {
             this.ConstructProbabilityTable();
         });
 
-        this._groups.push(groupObj);
+        this._blocks.push(groupObj); 
     }
 
     GroupChanged(group) {
-        const inputStr = group.elementsElm.value;
+        const inputStr = group.TextareaElm.value;
         const inputLines = inputStr.split("\n");
         const inputSentences = [];
         for (let i = 0; i < inputLines.length; i++) {
@@ -229,6 +229,7 @@ export class InputManager extends BaseClass {
             }
         }
 
+        console.log("Elements", elements);
         group.elementsArray = elements;
 
         this.ConstructProbabilityTable();
@@ -236,6 +237,13 @@ export class InputManager extends BaseClass {
 
 
     AddNewDiscreteRange() {
+
+        console.log("Adding new discrete range");
+
+        const block = new DiscreteRangeBlock(this._generator);
+        this.AddBlock(block);
+        return block;
+
         const groupObj = {};
 
         const groupElm = document.createElement("div");
@@ -268,7 +276,7 @@ export class InputManager extends BaseClass {
         inputProbability.classList.add("categorical-probability");
         probabilityElm.appendChild(inputProbability);
 
-        this._controlsElm.insertBefore(groupElm, this._addRangeButtonElm);
+        this._controlsElm.insertBefore(groupElm, this._addDiscreteRangeButtonElm);
 
         groupObj.group = groupElm;
         groupObj.elementsElm = header;
@@ -278,44 +286,121 @@ export class InputManager extends BaseClass {
             this.ConstructProbabilityTable();
         });
 
-        this._groups.push(groupObj);
+        this._blocks.push(groupObj);
     }
 
+    AddNewContinuousRange() {
+        const block = new ContinuousRangeBlock(this._generator);
+        this.AddBlock(block);
+        return block;
+    }
 
+    AddBlock(block) {
+        block.AddEventListener("ProbabilityChanged", () => this.ConstructProbabilityTable());
+        block.AddEventListener("BlockRemoved", () => this.RemoveBlock(block));
+        block.AddEventListener("DistributionChanged", () => this._generator.AutoGenerateSequence());
+        block.BlockElm.addEventListener("focusin", () => {
+            this.SetBlockFocus(block);
+        });
+        block.HeaderElm.addEventListener("focus", () => {
+            this.SetBlockFocus(block);
+        });
+        this._blocks.push(block);
+        this._controlsElm.insertBefore(block.BlockElm, this._addContinuRangeButtonElm);
+    }
+
+    SetBlockFocus(block) {
+        block.GotFocus();
+        for (let i = 0; i < this._blocks.length; i++) {
+            if (this._blocks[i] != block) {
+                this._blocks[i].LostFocus();
+                console.log("Lost Focus", i);
+            }
+        }
+    }
 
     ConstructProbabilityTable() {
-        const elementsArray = [];
+        const blockArray = [];
         const probabilityArray = [];
         let probability = 0;
 
-        const continuesRangeProbability = parseFloat(this._rangeProbabilityElm.value);
-        elementsArray.push(null);
-        probabilityArray.push(continuesRangeProbability);
-        probability += continuesRangeProbability;
+        for (let i = 0; i < this._blocks.length; i++) {
+            const group = this._blocks[i];
+            var groupProbability = group.Probability;
+            if (isNaN(groupProbability) || groupProbability == 0) {
+                continue;
+            }
 
-        for (let i = 0; i < this._groups.length; i++) {
-            const group = this._groups[i];
-            const groupElements = group.elementsArray;
-            var groupProbability = parseFloat(group.probabilityElm.value);
-            if (isNaN(groupProbability)) {
-                groupProbability = 0;
-            }
-            groupProbability /= groupElements.length;
-            for (let j = 0; j < groupElements.length; j++) {
-                const element = groupElements[j];
-                probability += groupProbability;
-                elementsArray.push(element);
-                probabilityArray.push(probability);
-            }
+            blockArray.push(group);
+            probability += groupProbability;
+            probabilityArray.push(probability);
         }
 
-        this._elementsArray = elementsArray;
+        this._blockArray = blockArray;
         if (probability == 0) {
             probability = 1;
         }
         this._probabilitiesArray = probabilityArray.map((value) => value / probability);
 
-        this._generator.Elements = elementsArray;
+        this._generator.Elements = blockArray;
         this._generator.Probabilities = this._probabilitiesArray;
+        this._generator.AutoGenerateSequence();
+
+        console.log("probabilities: " + this._probabilitiesArray);
+
+    }
+
+    RemoveBlock(block) {
+        console.log("Remove Block");
+        this._controlsElm.removeChild(block.BlockElm);
+        this._blocks.splice(this._blocks.indexOf(block), 1);
+        this.ConstructProbabilityTable();
+    }
+
+    BlockInputChanged() {
+
+    }
+
+    SetDecimalState(state = 0) {
+
+        if (state == 0) {
+            state = parseInt(this._decimalStateSliderElm.value);
+        }
+
+        if (state != this._decimalState) {
+
+            this._decimalState = state;
+
+            if (this._decimalState == 1) {
+                this._decimalStateMaxLabelElm.classList.add("setting-option-label-selected");
+                this._decimalStateFixLabelElm.classList.remove("setting-option-label-selected");
+                this._decimalStatePrecisionLabelElm.classList.remove("setting-option-label-selected");
+            }
+            else if (this._decimalState == 2) {
+                this._decimalStateMaxLabelElm.classList.remove("setting-option-label-selected");
+                this._decimalStateFixLabelElm.classList.add("setting-option-label-selected");
+                this._decimalStatePrecisionLabelElm.classList.remove("setting-option-label-selected");
+            }
+            else if (this._decimalState == 3) {
+                this._decimalStateMaxLabelElm.classList.remove("setting-option-label-selected");
+                this._decimalStateFixLabelElm.classList.remove("setting-option-label-selected");
+                this._decimalStatePrecisionLabelElm.classList.add("setting-option-label-selected");
+            }
+            
+            if (parseInt(this._decimalStateSliderElm.value) != this._decimalState) {
+                this._decimalStateSliderElm.value = state;
+            }
+            this._generator.ValueDecimalState = state;
+        }
+    }
+
+    SetDecimalLength() {
+        const length = parseInt(this._decimalLengthSliderElm.value);
+        if (length != this._decimalLength) {
+            this._decimalLength = length;
+            this._decimalLengthValueElm.value = length;
+            this._generator.ValueDecimalLength = this._decimalLength;
+            console.log("Decimal length: " + length);
+        }
     }
 }

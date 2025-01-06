@@ -10,6 +10,10 @@ export class GeneratorManager {
     _inputManager;
     _settingsManager;
 
+    get InputManager() {
+        return this._inputManager;
+    }
+
     constructor(formatter) {
         this._formatter = formatter;
         this.Setup();
@@ -18,7 +22,6 @@ export class GeneratorManager {
     Setup() {
         this._generator = new Generator(this._formatter);
         this._inputManager = new InputManager(this._generator);
-        this._settingsManager = new GeneratorSettingsManager(this._generator);
     }
 
 }

@@ -1,11 +1,39 @@
 
 :root {
+
+    --color1: #0f1215;
+    --color2: #1a2026;
+    --color3: #262f37;
+    --color3a1: #262f3766;
+    --color4: #313d49;
+    --color5: #3b4c5b;
+    --color6: #465b6d;
+    --color7: #506a80;
+    --color8: #5a7993;
+    --color9: #6688a3;
+    --color10: #7796af;
+    --color11: #88a4bb;
+    --color12: #99b3c6;
+    --color13: #abc1d1;
+    --color14: #bdcfdc;
+    --color15: #cfdde6;
+    --color16: #e2eaf0;
+    --color17: #f5f8fa;
+
     --default-font: 'Helvetica Neue', Helvetica, Tahoma, Verdana, sans-serif;
-    --white-color: #f5f8fa;
-    --input-color: #495564;
-    --input-focus-color: #56677b;
-    --histogram-color: #dee7ed;
-    --background-color: #1b2126;
+    --input-output-font: 'Courier New', Courier, monospace;
+    --white-color: var(--color16);
+    --input-color: var(--color3);
+    --input-focus-color: var(--color15);
+    --input-focus-text-color: var(--color3);
+    --histogram-color: var(--color15);
+    --background-color: var(--color1);
+    --settings-background-color: var(--color3a1);
+    --controller-color: var(--color14);
+    --secondary-text-color: var(--color15);
+    --main-text-color: var(--color17);
+    --icon-color: var(-color15);
+    --header-color: var(--color14);
 }
 
 *,
@@ -23,12 +51,12 @@ html {
 body {
     width: 100vw;
     height: 100vh;
-    background-color: #1b2126;
+    background-color: var(--background-color);
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
     font-family: var(--default-font);
-    color: var(--white-color);
+    color: var(--secondary-text-color);
 }
 
 #top-field {
@@ -51,7 +79,7 @@ header {
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: 0.33fr repeat(2, 1fr) 2fr;
     background-color: #0b0c0ecc;
-    color: white;
+    color: var(--header-color);
 }
 
 h1 {
@@ -100,7 +128,7 @@ h1 {
 }
 
 input {
-    font-family: var(--default-font);
+    font-family: var(--input-output-font);
     color: var(--white-color);
     background-color: var(--input-color);
     border: 0px solid #0000;
@@ -111,6 +139,8 @@ input:focus {
     background-color: var(--input-focus-color);
     box-shadow: none;
     outline: none;
+    color: var(--input-focus-text-color);
+    font-weight: bold;
 }
 
 main {
@@ -140,15 +170,15 @@ main {
     grid-row-end: 2;
     display: flex;
     flex-flow: row wrap;
-    align-items: center;
+    align-items: stretch;
     gap: 1.5rem;
 }
 
 .input-block {
-    height: 14rem;
     display: grid;
     grid-template-columns: auto;
     gap: 0.5rem;
+    padding: 0.5rem;
 }
 
 #numerical-block {
@@ -185,6 +215,7 @@ main {
     grid-row-end: 5;
 }
 
+.range-input-field,
 .input-field {
     display: flex;
     flex-flow: column nowrap;
@@ -198,9 +229,17 @@ main {
     text-align: center;
 }
 
+.range-input-field label,
 .input-field label {
     padding: 0.2rem;
     font-size: 0.8rem;
+}
+
+.range-input-field input {
+    width: 17ch;
+    padding: 0.5rem 0.5rem 0.5rem 0.8rem;
+    font-size: 1.1rem;
+    text-align: center;
 }
 
 .input-textarea-field {
@@ -209,17 +248,37 @@ main {
     height: 100%;
     color: var(--white-color);
     font-size: 1rem;
-    font-family: var(--default-font);
+    font-family: var(--input-output-font);
     letter-spacing: 0.1rem;
     background-color: var(--background-color);
     padding: 0.5rem;
     resize: horizontal;
 }
 
+.step-input-field {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    background-color: var(--input-color);
+}
+
+.step-input-field input {
+    width: 8ch;
+    font-size: 1.1rem;
+    text-align: center;
+    padding: 0.4rem;
+}
+
+.step-input-field label {
+    padding: 0.2rem;
+    font-size: 0.8rem;
+}
+
 .weight-input-field {
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
+    align-items: center;
     background-color: var(--input-color);
 }
 
@@ -338,6 +397,12 @@ main {
     transform: translateY(0.2rem);
 }
 
+.trash-can-icon {
+    height: 1rem;
+    width: auto;
+    padding: 0 0.4rem;
+}
+
 #info-and-settings {
     grid-column-start: 2;
     grid-column-end: 3;
@@ -359,7 +424,26 @@ main {
     min-width: 250px;
 }
 
+.settings-input-box {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.2rem;
+}
+
+.settings-input-box input {
+    width: 14ch;
+    padding: 0.5rem 0.5rem 0.8rem 0.8rem;
+    font-size: 1.3rem;
+    text-align: center;
+}
+
+.settings-input-box label {
+    padding: 0.2rem;
+    font-size: 0.8rem;
+}
+
 #settings-container {
+    align-self: flex-end;
     position: relative;
     display: flex;
     flex-flow: row nowrap;
@@ -400,7 +484,7 @@ main {
     display: flex;
     flex-flow: column nowrap;
     padding: 1rem;
-    background-color: #1b212699;
+    background-color: var(--settings-background-color);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     gap: 1.5rem;
@@ -421,6 +505,10 @@ main {
     flex-flow: row nowrap;
     justify-content: space-around;
     align-items: center;
+}
+
+#settings-distribution {
+    display: flex;
 }
 
 .settings-option {
@@ -478,7 +566,8 @@ main {
 .linebreak-marking,
 .setting-option-label-selected {
     font-weight: bold;
-    color:  var(--white-color);
+    color:  var(--main-text-color);
+    text-transform: uppercase;
 }
 
 .settings-slider-small,
@@ -488,7 +577,7 @@ main {
     width: min(100%, 12rem);
     height: 1px;
     margin: 0.4rem 0;
-    background-color: var(--white-color);
+    background-color: var(--controller-color);
 }
 
 .settings-slider-small:disabled,
@@ -503,7 +592,7 @@ main {
     appearance: none;
     width: 1.2rem;
     height: 1.2rem;
-    background-color: var(--white-color);
+    background-color: var(--controller-color);
     cursor: pointer;
     border-radius: 0.2rem;
 }
@@ -541,7 +630,7 @@ main {
     appearance: none;
     width: 0.9rem;
     height: 0.9rem;
-    background-color: var(--white-color);
+    background-color: var(--controller-color);
     cursor: pointer;
     border-radius: 0.2rem;
 }
@@ -561,7 +650,7 @@ main {
     width: 0.9rem;
     height: 0.9rem;
     background-color: #1b2126;
-    border: 1px solid var(--input-color);
+    border: 1px solid var(--controller-color);
     cursor: default;
     border-radius: 0.2rem;
 }
@@ -569,7 +658,7 @@ main {
 .settings-slider-small:disabled::-moz-range-thumb {
     width: 0.9rem;
     height: 0.9rem;
-    background-color: var(--white-color);
+    background-color: var(--input-color);
     cursor: pointer;
     border-radius: 0.2rem;
 }
@@ -624,13 +713,41 @@ main {
 
 
 #output {
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 1.1rem;
+    font-family: var(--input-output-font);
+    font-size: 1.2rem;
     word-spacing: 0.2rem;
+    color: var(--main-text-color);
 }
 
 #output span {
     color: darkgray;
+}
+
+
+#pride-badge {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #ffd3e7;
+    padding: 0.3rem;
+    border-radius: 7px;
+    border: 1px solid #ffb6d8;
+}
+
+#pride-banner-text {
+    align-self: center;
+    font-size: 0.75rem;
+    line-height: 1.1;
+    white-space: pre;
+    color: var(--color1);
+    text-align: center;
+}
+
+.pride-banner-flag {
+    height: 2.5rem;
+    border-radius: 5px;
 }
 
 

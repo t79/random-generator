@@ -39,6 +39,7 @@
             <div id="main-controls">
 
 
+                <!--
 
                 <div id="numerical-block" class="input-block">
 
@@ -63,6 +64,15 @@
 
                 </div>
 
+                -->
+
+                <div id="add-continuous-range" class="add-block">
+                    <span>New</span>
+                    <span>Continu.</span>
+                    <span>Range</span>
+                    <img src="assets/icons/square-plus-solid.svg">
+                </div>
+
                 <div id="add-discrete-range" class="add-block">
                     <span>New</span>
                     <span>Discrete</span>
@@ -70,8 +80,9 @@
                     <img src="assets/icons/square-plus-solid.svg">
                 </div>
 
-                <div id="add-categorical-group" class="add-block">
+                <div id="add-discrete-group" class="add-block">
                     <span>New</span>
+                    <span>Discrete</span>
                     <span>Group</span>
                     <img src="assets/icons/square-plus-solid.svg">
                 </div>
@@ -88,11 +99,11 @@
                     <img id="download-icon" src="assets/icons/file-arrow-down-solid.svg">
                     
                 </div>
-                <div class="input-box">
-                    <label id="count-value-label" for="count-value">Number of Values</label>
+                <div class="settings-input-box">
+                    <label id="count-value-label" for="count-value">Sequence Length</label>
                     <input id="count-value" name="count-value" type="number" min="1" value="1">
                 </div>
-                <div id="count-matrix-box" class="input-box">
+                <div id="count-matrix-box" class="settings-input-box">
                     <label id="count-per-matrix-label" for="count-value">Values per Matrix</label>
                     <input id="count-per-matrix" name="count-value" type="text" value="1" readonly>
                 </div>
@@ -104,8 +115,12 @@
                     <div id="settings-column-container">
                         <div id="settings-column">
     
-                            <div class="setting-block">
+                            <div id="settings-distribution" class="setting-block">
     
+                                <div class="settings-option">
+                                    <span id="settings-distribution-header"></span>
+                                </div>
+
                                 <div class="settings-option">
                                     <span>Distribution</span>
                                 </div>
@@ -228,21 +243,13 @@
                                 </div>
     
                             </div>
-    
-                            <div class="setting-block">
-    
-                                <div class="settings-option">
-                                    <span>Linebreak</span>
-                                </div>
-    
-                                <div class="settings-option">
-                                    <span id="settings-linebreak-label">On (Wrap)</span>
-                                </div>
-    
-                                <div class="settings-slider-option">
-                                    <input type="range" class="settings-slider" id="linebreak-slider" min="0" max="0" value="0" step="1">
-                                </div>
+
+                            <div id="pride-badge">
+                                <img class="pride-banner-flag" src="assets/img/gay_pride_flag.svg" alt="Pride flag">
+                                <img class="pride-banner-flag" src="assets/img/transgender_pride_flag.svg" alt="Transgender pride flag">
+                                <div id="pride-banner-text">Made by a Transgender<br>Who wishes to be a girl</div>
                             </div>
+
                         </div>
                     </div>
                 </div>
