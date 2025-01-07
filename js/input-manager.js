@@ -149,7 +149,7 @@ export class InputManager extends BaseClass {
 
     AddNewDiscreteGroup() {
         const block = new CategoricalBlock(this._generator);
-        block.AddEventListener("ElementsChanged", () => this.GroupChanged(block));
+        //block.AddEventListener("ElementsChanged", () => this.GroupChanged(block));
         this.AddBlock(block);
         return block;
     }

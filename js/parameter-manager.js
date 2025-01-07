@@ -350,7 +350,7 @@ export class ParameterManager {
         this.DiscreteRangeChanged(block);
     }
 
-    DiscreteGroupChanged(block) {
+    DiscreteRangeChanged(block) {
 
     }
 
