@@ -90,8 +90,8 @@ export class InputManager extends BaseClass {
         this._regenerateButtonElm.addEventListener("click", () => this.ReGenerateSequence());
         this._sequenceLengthInputElm.addEventListener("input", () => this.SetSequenceLength());
         this._addDiscreteBlockButtonElm.addEventListener("click", () => this.MakeDiscreteGroup());
-        this._addDiscreteRangeButtonElm.addEventListener("click", () => this.AddNewDiscreteRange());
-        this._addContinuRangeButtonElm.addEventListener("click", () => this.AddNewContinuousRange());
+        this._addDiscreteRangeButtonElm.addEventListener("click", () => this.MakeDiscreteRange());
+        this._addContinuRangeButtonElm.addEventListener("click", () => this.MakeContinuousRange());
         this._decimalStateSliderElm.addEventListener("input", () => this.SetDecimalState());
         this._decimalLengthSliderElm.addEventListener("input", () => this.SetDecimalLength());
     }
@@ -143,150 +143,31 @@ export class InputManager extends BaseClass {
     }
 
     MakeDiscreteGroup() {
-        const block = this.AddNewGroup();
+        const block = this.AddNewDiscreteGroup();
         this.DispatchEvent("NewDiscreteGroup", block);
     }
 
-    AddNewGroup() {
-
-        console.log("Adding new group");
-
+    AddNewDiscreteGroup() {
         const block = new CategoricalBlock(this._generator);
         block.AddEventListener("ElementsChanged", () => this.GroupChanged(block));
         this.AddBlock(block);
         return block;
-
-        const groupObj = {};
-
-        const groupElm = document.createElement("div");
-        groupElm.classList.add("input-block");
-        groupElm.style.gridTemplateRows = "1fr auto"
-
-        const inputElements = document.createElement("textarea");
-        inputElements.classList.add("input-textarea-field");
-        inputElements.style.gridColumn = "1";
-        inputElements.style.gridRowStart = "1";
-        inputElements.style.gridRowEnd = "2";
-        groupElm.appendChild(inputElements);
-
-        const probabilityElm = document.createElement("div");
-        probabilityElm.classList.add("weight-input-field");
-        probabilityElm.style.gridColumn = "1";
-        probabilityElm.style.gridRowStart = "2";
-        probabilityElm.style.gridRowEnd = "3";
-        groupElm.appendChild(probabilityElm);
-
-        const probabilityLabel = document.createElement("label");
-        probabilityLabel.innerHTML = "Probability<br>Weight";
-        probabilityElm.appendChild(probabilityLabel);
-
-        const inputProbability = document.createElement("input");
-        inputProbability.type = "number";
-        inputProbability.value = 1;
-        inputProbability.min = 0;
-        inputProbability.classList.add("categorical-probability");
-        probabilityElm.appendChild(inputProbability);
-
-        this._controlsElm.insertBefore(groupElm, this._addDiscreteRangeButtonElm);
-
-        groupObj.group = groupElm;
-        groupObj.elementsElm = inputElements;
-        groupObj.probabilityElm = inputProbability;
-
-        inputElements.addEventListener("input", () => {
-            this.GroupChanged(groupObj);
-        });
-
-        inputProbability.addEventListener("input", () => {
-            this.ConstructProbabilityTable();
-        });
-
-        this._blocks.push(groupObj); 
     }
 
-    GroupChanged(group) {
-        const inputStr = group.TextareaElm.value;
-        const inputLines = inputStr.split("\n");
-        const inputSentences = [];
-        for (let i = 0; i < inputLines.length; i++) {
-            const sentences = inputLines[i].split(",");
-            for (let j = 0; j < sentences.length; j++) {
-                const sentence = sentences[j].trim();
-                if (sentence.length > 0) {
-                    inputSentences.push(sentence);
-                }
-            }
-        }
-        const elements = [];
-        for (let i = 0; i < inputSentences.length; i++) {
-            const sentence = inputSentences[i];
-            const sentences = sentence.split(" ");
-            for (let j = 0; j < sentences.length; j++) {
-                const word = sentences[j].trim();
-                if (word.length > 0) {
-                    elements.push(word);
-                }
-            }
-        }
-
-        console.log("Elements", elements);
-        group.elementsArray = elements;
-
-        this.ConstructProbabilityTable();
+    MakeDiscreteRange() {
+        const block = this.AddNewDiscreteRange();
+        this.DispatchEvent("NewDiscreteRange", block);
     }
-
 
     AddNewDiscreteRange() {
-
-        console.log("Adding new discrete range");
-
         const block = new DiscreteRangeBlock(this._generator);
         this.AddBlock(block);
         return block;
+    }
 
-        const groupObj = {};
-
-        const groupElm = document.createElement("div");
-        groupElm.classList.add("input-block");
-        groupElm.style.gridTemplateRows = "auto 1fr 1fr 0.7fr auto"
-
-        const header = document.createElement("div");
-        header.classList.add("block-header");
-        header.style.gridColumn = "1";
-        header.style.gridRowStart = "1";
-        header.style.gridRowEnd = "2";
-        header.innerHTML = "Discrete Range";
-        groupElm.appendChild(header);
-
-        const probabilityElm = document.createElement("div");
-        probabilityElm.classList.add("weight-input-field");
-        probabilityElm.style.gridColumn = "1";
-        probabilityElm.style.gridRowStart = "5";
-        probabilityElm.style.gridRowEnd = "6";
-        groupElm.appendChild(probabilityElm);
-
-        const probabilityLabel = document.createElement("label");
-        probabilityLabel.innerHTML = "Probability<br>Weight";
-        probabilityElm.appendChild(probabilityLabel);
-
-        const inputProbability = document.createElement("input");
-        inputProbability.type = "number";
-        inputProbability.value = 1;
-        inputProbability.min = 0;
-        inputProbability.classList.add("categorical-probability");
-        probabilityElm.appendChild(inputProbability);
-
-        this._controlsElm.insertBefore(groupElm, this._addDiscreteRangeButtonElm);
-
-        groupObj.group = groupElm;
-        groupObj.elementsElm = header;
-        groupObj.probabilityElm = inputProbability;
-
-        inputProbability.addEventListener("input", () => {
-            this.ConstructProbabilityTable();
-        });
-
-        this._blocks.push(groupObj);
+    MakeContinuousRange() {
+        const block = this.AddNewContinuousRange();
+        this.DispatchEvent("NewContinuousRange", block);
     }
 
     AddNewContinuousRange() {
@@ -314,7 +195,6 @@ export class InputManager extends BaseClass {
         for (let i = 0; i < this._blocks.length; i++) {
             if (this._blocks[i] != block) {
                 this._blocks[i].LostFocus();
-                console.log("Lost Focus", i);
             }
         }
     }
@@ -357,9 +237,9 @@ export class InputManager extends BaseClass {
         this.ConstructProbabilityTable();
     }
 
-    BlockInputChanged() {
+    // BlockInputChanged() {
 
-    }
+    // }
 
     SetDecimalState(state = 0) {
 

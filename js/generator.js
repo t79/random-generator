@@ -5,8 +5,8 @@ export class Generator extends BaseClass {
 
     _formatter = null;
 
-    _rangeFrom;
-    _rangeTo;
+    _rangeFrom = 0;
+    _rangeTo = 0;
     _sequenceLength;
     _valueDecimalState = 1;
     _valueDecimalLength = 0;
@@ -108,138 +108,27 @@ export class Generator extends BaseClass {
                 if (this._probabilityArray.length == 1) {
                     return this._elementsArray[0].GenerateRawValue();
                 }
-                const rand = jStat.uniform.sample(0, 1);
-                return this.FindBlock(rand).GenerateRawValue();
+                return this.FindBlock().GenerateRawValue();
             });
-            this.GenerateValues();
         }
         else {
             this._rawSequence = [];
-            this.GenerateValues();
-        } 
+        }
+
+        this.GenerateValues();
+        this.FindRange();
+        this.DispatchEvent("RawSequenceGenerated");
     }
 
-    FindBlock(rand) {
+    FindBlock() {
+        const rand = jStat.uniform.sample(0, 1);
         let index = 0;
-        
         for (index = 0; index < this._probabilityArray.length; index++) {
             if (rand < this._probabilityArray[index]) {
                 break;
             } 
         }
         return this._elementsArray[index];
-    }
-
-    BinarySearch(array, value) {
-        let low = 0;
-        let high = array.length - 1;
-        while (low <= high) {
-            const mid = Math.floor((low + high) / 2);
-            if ((mid > 0 && array[mid] > value  && array[mid - 1] <= value)
-                || (mid === 0 && array[0] > value)) {
-                return mid;
-            } else if (array[mid] < value) {
-                low = mid + 1;
-            } else {
-                high = mid - 1;
-            }
-        }
-        return low;
-    }
-
-    GenerateContinuousValue() {
-        if (this._distribution == 1) {
-            return jStat.uniform.sample(this._rangeFrom, this._rangeTo);
-        }
-        else if (this._distribution == 2) {
-            let value = 0;
-            do {
-                value = jStat.normal.sample(this._distNormal.mean, this._distNormal.sd);
-                value /= this._distNormal.clip * 2 
-                value += 0.5;
-            } while( value < 0 || value >= 1 )
-            value *= this._rangeTo - this._rangeFrom;
-            value += this._rangeFrom;
-            return value;
-        }
-        else if (this._distribution == 3) {
-            let value = jStat.beta.sample( this._distBeta.alpha, this._distBeta.beta );
-            value *= this._rangeTo - this._rangeFrom;
-            value += this._rangeFrom;
-            return value;
-        }
-        else if (this._distribution == 4) {
-            let value = 0;
-            do {
-                value = jStat.cauchy.sample( this._distCauchy.local, this._distCauchy.scale );
-                value /= this._distCauchy.clip * 2;
-                value += 0.5;
-            } while ( value < 0 || value >= 1 )
-            value *= this._rangeTo - this._rangeFrom;
-            value += this._rangeFrom;
-            return value;
-        }
-        else if (this._distribution == 5) {
-            let value = 0;
-            do {
-                value = jStat.chisquare.sample(this._distChiSquare.dof);
-                value /= this._distChiSquare.clip;
-            } while ( value < 0 || value >= 1 )
-            value *= this._rangeTo - this._rangeFrom;
-            value += this._rangeFrom;
-            return value;
-        }
-        else if (this._distribution == 6) {
-            let value = 0;
-            do {
-                value = jStat.gamma.sample(this._distGamma.shape, this._distGamma.scale );
-                value /= this._distGamma.clip;
-            } while ( value < 0 || value >= 1 )
-            value *= this._rangeTo - this._rangeFrom;
-            value += this._rangeFrom;
-            return value;
-        }
-        else if (this._distribution == 7) {
-            let value = 0;
-            do {
-                value = jStat.invgamma.sample( this._distInvGamma.alpha, this._distInvGamma.beta );
-                value /= this._distInvGamma.clip;
-            } while ( value < 0 || value >= 1 )
-            value *= this._rangeTo - this._rangeFrom;
-            value += this._rangeFrom;
-            return value;
-        }
-        else if (this._distribution == 8) {
-            let value = 0;
-            do {
-                value = jStat.lognormal.sample( this._distLogNormal.mu, this._distLogNormal.sigma);
-                value /= this._distLogNormal.clip;
-            } while ( value < 0 || value >= 1 )
-            value *= this._rangeTo - this._rangeFrom;
-            value += this._rangeFrom;
-            return value;
-        }
-        else if (this._distribution == 9) {
-            let value = 0;
-            do {
-                value = jStat.studentt.sample( this._distStudentt.dof);
-                value /= this._distStudentt.clip * 2;
-                value += 0.5;
-            } while ( value < 0 || value >= 1 )
-            value *= this._rangeTo - this._rangeFrom;
-            value += this._rangeFrom;
-            return value;
-        }
-        else if (this._distribution == 10) {
-            let value = 0;
-            do {
-                value = jStat.weibull.sample( this._distWeibull.scale, this._distWeibull.shape);
-                value /= this._distLogNormal.clip;
-            } while ( value < 0 || value >= 1 )
-            value *= this._rangeTo - this._rangeFrom;
-            value += this._rangeFrom;
-            return value;
-        }
     }
 
     GenerateValues() {
@@ -274,6 +163,17 @@ export class Generator extends BaseClass {
                 return 0;
             }
             return value.toPrecision(this._valueDecimalLength);
+        }
+    }
+
+    FindRange() {
+        if (this._elementsArray.length > 0) {
+            this._rangeFrom = Math.min(...this._elementsArray.map(element => element.RangeFrom));
+            this._rangeTo = Math.max(...this._elementsArray.map(element => element.RangeTo));
+        }
+        else {
+            this._rangeFrom = 0;
+            this._rangeTo = 0;
         }
     }
 }

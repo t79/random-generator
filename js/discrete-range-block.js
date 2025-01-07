@@ -17,6 +17,10 @@ export class DiscreteRangeBlock extends RangeBlock {
         this._inputStepElm.dispatchEvent(new Event("input"));
     }
 
+    get RangeStepElm() {
+        return this._inputStepElm;
+    }
+
     constructor(generator) {
         super(generator);
         this._blockHederTitle = "Discrete Range " + DiscreteRangeBlock.blockId++
@@ -29,11 +33,10 @@ export class DiscreteRangeBlock extends RangeBlock {
 
     GenerateRawValue() {
 
-        const range = this._inputTo - this._inputFrom;
+        const range = this._rangeTo - this._rangeFrom;
         const position = range * this.GetRandomValue();
         const numSteps = Math.floor(position / this._inputStep) * this._inputStep;
-
-        const value = this._inputFrom + numSteps;
+        const value = this._rangeFrom + numSteps;
 
         return value;
     }

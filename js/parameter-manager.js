@@ -7,11 +7,13 @@ export class ParameterManager {
     _DECIMAL_STATE = 1;
     _DECIMAL_PLACES = 0;
     _FORMAT_STATE = 1;
-    _FORMAT_ND = "2x2"
+    _FORMAT_ND = "2x2";
+    _PROBABILITY = 2.0;
     _CONTINUOUS_RANGE_FROM = 1;
     _CONTINUOUS_RANGE_TO = 100;
     _DISCRETE_RANGE_FROM = 1;
     _DISCRETE_RANGE_TO = 100;
+    _DISCRETE_STEP = 0.5;
 
     _inputManager;
 
@@ -65,6 +67,8 @@ export class ParameterManager {
         this._formatStateSliderElm.addEventListener("input", () => this.FormatChanged());
         this._formatNDInputElm.addEventListener("input", () => this.FormatChanged());
         this._inputManager.AddEventListener("NewDiscreteGroup", (inst) => this.DiscreteGroupAdded(inst));
+        this._inputManager.AddEventListener("NewContinuousRange", (inst) => this.ContinuousRangeAdded(inst));
+        this._inputManager.AddEventListener("NewDiscreteRange", (inst) => this.DiscreteRangeAdded(inst));
     }
 
     SetParameters() {
@@ -124,12 +128,13 @@ export class ParameterManager {
                 this._formatND = this._FORMAT_ND;
             }
             this._formatState = isNaN(formatState) || formatState > 3 || formatState < 1 ? this._FORMAT_STATE : formatState;
-            this._formatNDInputElm.value = this._formatND;
-            this._formatNDInputElm.dispatchEvent(new Event("input"));
         }
         else {
             this._formatState = this._FORMAT_STATE;
+            this._formatND = this._FORMAT_ND;
         }
+        this._formatNDInputElm.value = this._formatND;
+        this._formatNDInputElm.dispatchEvent(new Event("input"));
         this._formatStateSliderElm.value = this._formatState;
         this._formatStateSliderElm.dispatchEvent(new Event("input"));
     }
@@ -222,7 +227,7 @@ export class ParameterManager {
         this.AddBlock(params, "dg", (values) => {
             const probability = parseFloat(values[0]);
             if (isNaN(probability) == false) {
-                const block = this._inputManager.AddNewGroup();
+                const block = this._inputManager.AddNewDiscreteGroup();
                 block.Probability = probability;
                 if (values.length > 1) {
                     const elements = values.slice(1, values.length);
@@ -332,13 +337,27 @@ export class ParameterManager {
 
     DiscreteRangeAdded(block) {
         this._discreteRanges.push(block);
+        block.ProbabilityElm.value = this._PROBABILITY;
+        block.ProbabilityElm.dispatchEvent(new Event("input"));
+        block.RangeFromElm.value = this._DISCRETE_RANGE_FROM;
+        block.RangeFromElm.dispatchEvent(new Event("input"));
+        block.RangeToElm.value = this._DISCRETE_RANGE_TO;
+        block.RangeToElm.dispatchEvent(new Event("input"));
+        block.RangeStepElm.value = this._DISCRETE_STEP;
+        block.RangeStepElm.dispatchEvent(new Event("input"));
         this.SetParam("drc", this._discreteRanges.length);
         block.AddEventListener("ProbabilityChanged", (inst) => this.DiscreteRangeChanged(inst));
         this.DiscreteRangeChanged(block);
     }
 
+    DiscreteGroupChanged(block) {
+
+    }
+
     DiscreteGroupAdded(block) {
         this._discreteGroups.push(block);
+        block.ProbabilityElm.value = this._PROBABILITY;
+        block.ProbabilityElm.dispatchEvent(new Event("input"));
         this.SetParam("dgc", this._discreteGroups.length);
         block.AddEventListener("ProbabilityChanged", (inst) => this.DiscreteGroupChanged(inst));
         block.AddEventListener("ElementsChanged", (inst) => this.DiscreteGroupChanged(inst));
@@ -392,6 +411,43 @@ export class ParameterManager {
         }
 
         this.UpdateParams();
+    }
+
+    ContinuousRangeAdded(block) {
+        this._continuousRanges.push(block);
+        block.ProbabilityElm.value = this._PROBABILITY;
+        block.ProbabilityElm.dispatchEvent(new Event("input"));
+        block.RangeFromElm.value = this._DISCRETE_RANGE_FROM;
+        block.RangeFromElm.dispatchEvent(new Event("input"));
+        block.RangeToElm.value = this._DISCRETE_RANGE_TO;
+        block.RangeToElm.dispatchEvent(new Event("input"));
+        this.SetParam("crc", this._continuousRanges.length);
+        block.AddEventListener("ProbabilityChanged", (inst) => this.ContinuousRangeChanged(inst));
+        this.ContinuousRangeChanged(block);
+    }
+
+    ContinuousRangeChanged(block) {
+        if (this._isSet == false) {
+            return;
+        }
+        const index = this._continuousRanges.indexOf(block);
+        if (index == -1) {
+            return;
+        }
+        const key = "cr" + (index + 1);
+        const probability = block.Probability;
+        const fromRange = block.FromRange;
+        const toRange = block.ToRange;
+        const values = [fromRange, toRange, probability];
+        const valueStr = values.join(" ");
+        console.log(key, valueStr);
+        if (this._timeouts[key]) {
+            clearTimeout(this._timeouts[key]);
+        }
+        this._timeouts[key] = setTimeout(() => {
+            this.SetParam(key, valueStr);
+            this.UpdateParams();
+        }, 1000);
     }
 
     GetParam(param) {

@@ -24,7 +24,7 @@ export class RandomHeader {
     Setup() {
         this._headerElm = document.querySelector("header");
         this._generator = new Generator();
-        this._generator.Elements = [new ContinuousRangBlock()];
+        this._generator.Elements = [new ContinuousRangeBlock()];
         this._generator.Probabilities = [1]
         this._generator.Active = true;
         this.MakeHeaderElements();

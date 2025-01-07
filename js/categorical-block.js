@@ -13,6 +13,7 @@ export class CategoricalBlock extends Block {
         this._elements = value;
         this._textareaElm.value = value.join(" ");
         this._textareaElm.dispatchEvent(new Event("input"));
+        this.SetRange();
     }
 
     get Elements() {
@@ -22,6 +23,7 @@ export class CategoricalBlock extends Block {
     set ElementsStr(value) {
         this._elements = value.split(", ");
         this._textareaElm.value = value;
+        this.SetRange();
     }
 
     get TextareaElm() {
@@ -30,6 +32,7 @@ export class CategoricalBlock extends Block {
 
     constructor(generator) {
         super(generator);
+        this._blockHederTitle = "Discrete Group " + CategoricalBlock.blockId++;
         this.CreateBlockElements();
     }
 
@@ -42,7 +45,7 @@ export class CategoricalBlock extends Block {
         const blockElm = this.CreateBlockDiv();
         blockElm.style.gridTemplateRows = "auto 1fr auto";
 
-        const header = this.CreateBlockHeader("Discrete Group " + CategoricalBlock.blockId++);
+        const header = this.CreateBlockHeader(this._blockHederTitle);
         header.style.gridRowStart = "1";
         header.style.gridRowEnd = "2";
         blockElm.appendChild(header);
@@ -96,5 +99,12 @@ export class CategoricalBlock extends Block {
                 }
             }
         }
+        this.SetRange();
+    }
+
+    SetRange() {
+        this._rangeFrom = Math.min(...this._elements);
+        this._rangeTo = Math.max(...this._elements) + 1;
+        console.log("Range", this._rangeFrom, this._rangeTo);  
     }
 }

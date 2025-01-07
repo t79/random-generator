@@ -13,7 +13,7 @@ export class ContinuousRangeBlock extends RangeBlock {
 
 
     GenerateRawValue() {
-        return (this._inputTo - this._inputFrom) * this.GetRandomValue() + this._inputFrom;
+        return (this._rangeTo - this._rangeFrom) * this.GetRandomValue() + this._rangeFrom;
     }
 
     CreateBlockElements() {

@@ -30,7 +30,7 @@ export class HistogramManager {
     }
 
     SetEventListener() {
-        this._generator.AddEventListener("SequenceChanged", (inst) => this.Draw())
+        this._generator.AddEventListener("RawSequenceGenerated", (inst) => this.Draw())
     }
 
     SetupHistogram() {
@@ -51,14 +51,14 @@ export class HistogramManager {
         const width = this._histogramElm.getBoundingClientRect().width;
         const height = this._histogramElm.getBoundingClientRect().height;
         if (width != this._width || 
-            this._rangeStart != this._generator.RangeStart || 
-            this._rangeEnd != this._generator.RangeEnd ||
+            this._rangeStart != this._generator.RangeFrom || 
+            this._rangeEnd != this._generator.RangeTo ||
             this._digitsChanged) {
 
             this._width = width;
-            this._rangeStart = this._generator.RangeStart;
-            this._rangeEnd = this._generator.RangeEnd;
-            
+            this._rangeStart = this._generator.RangeFrom;
+            this._rangeEnd = this._generator.RangeTo;
+            console.log(this._rangeStart, this._rangeEnd);
             let range = this._rangeEnd - this._rangeStart + 1;
             if (range < width - 20) {
                 if ((this._digitState == 1 || this._digitState == 2) &&

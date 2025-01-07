@@ -34,6 +34,16 @@ export class Block extends BaseClass {
     _distWeibull = {shape: 1.5, scale: 1, clip: 3.5};
 
     _hasFocus = false;
+    _rangeFrom;
+    _rangeTo;
+
+    get RangeFrom() {
+        return this._rangeFrom;
+    }
+
+    get RangeTo() {
+        return this._rangeTo;
+    }
 
     get Probability() {
         return parseFloat(this._inputProbabilityElm.value);
@@ -41,6 +51,9 @@ export class Block extends BaseClass {
     set Probability(value) {
         this._inputProbabilityElm.value = value;
         this._inputProbabilityElm.dispatchEvent(new Event("input"));
+    }
+    get ProbabilityElm() {
+        return this._inputProbabilityElm;
     }
 
     get Distribution() {
@@ -352,13 +365,16 @@ export class Block extends BaseClass {
         }
     }
 
-    DistributionSliderChanged() {        
-        this._distribution = parseInt(this._distSelectionSliderElm.value);
-        this.DistributionChanged();
+    DistributionSliderChanged() {   
+        if (this._hasFocus) {
+            this._distribution = parseInt(this._distSelectionSliderElm.value);
+            this.DistributionChanged();
+        }     
     }
 
     SetDistributionSlider() {
         this._distSelectionSliderElm.value = this._distribution;
+        this._settingsDistributionHeaderElm.innerHTML = this._blockHederTitle;
         this.DistributionChanged();
     }
 

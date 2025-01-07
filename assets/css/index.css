@@ -520,9 +520,9 @@ main {
 
 .settings-option input[type="number"],
 .settings-option input[type="text"] {
-    width: 80%;
+    width: 16ch;
     height: 1.3rem;
-    font-family: var(--default-font);
+    font-family: var(--input-output-font);
     font-size: 0.85rem;
     text-align: center;
     color: var(--white-color);
@@ -537,14 +537,15 @@ main {
     background-color: var(--input-focus-color);
     box-shadow: none;
     outline: none;
+    color: var(--input-focus-text-color);
+    font-weight: bold;
 }
 
 #settings-distribution-parameter-1,
 #settings-distribution-parameter-2,
 #settings-distribution-parameter-3 {
-    width: 8ch;
-    padding: 0.8rem 0.5rem;
-    font-size: 0.95rem;
+    width: 12ch;
+    padding: 0.8rem 0.3rem;
 }
 
 .settings-parameter {

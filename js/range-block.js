@@ -10,19 +10,24 @@ export class RangeBlock extends Block {
     _inputFromElm;
     _inputToElm;
 
-    _inputFrom;
-    _inputTo;
-
     set FromRange(value) {
-        this._inputFrom = value;
+        this._rangeFrom = value;
         this._inputFromElm.value = value;
         this._inputFromElm.dispatchEvent(new Event("input"));
     }
 
     set ToRange(value) {
-        this._inputTo = value;
+        this._rangeTo = value;
         this._inputToElm.value = value;
         this._inputToElm.dispatchEvent(new Event("input"));
+    }
+
+    get RangeFromElm() {
+        return this._inputFromElm;
+    }
+
+    get RangeToElm() {
+        return this._inputToElm;
     }
 
     constructor(generator) {
@@ -48,7 +53,7 @@ export class RangeBlock extends Block {
         inputField.appendChild(inputFrom);
         
         inputFrom.addEventListener("input", () => {
-            this._inputFrom = parseFloat(inputFrom.value);
+            this._rangeFrom = parseFloat(inputFrom.value);
         });
 
         this._inputFromElm = inputFrom;
@@ -74,7 +79,7 @@ export class RangeBlock extends Block {
         inputField.appendChild(inputTo);
 
         inputTo.addEventListener("input", () => {
-            this._inputTo = parseFloat(inputTo.value);
+            this._rangeTo = parseFloat(inputTo.value);
         });
 
         this._inputToElm = inputTo;
